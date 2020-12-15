@@ -1,4 +1,4 @@
-package com.example.ppsm2_flappy_tetris;
+package com.example.ppsm2_tetris;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import static android.content.Context.MODE_PRIVATE;

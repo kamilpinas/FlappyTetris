@@ -1,4 +1,4 @@
-package com.example.ppsm2_flappy_tetris;
+package com.example.ppsm2_tetris;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 

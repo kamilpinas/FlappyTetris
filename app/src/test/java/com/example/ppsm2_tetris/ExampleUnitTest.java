@@ -1,4 +1,4 @@
-package com.example.ppsm2_flappy_tetris;
+package com.example.ppsm2_tetris;
 
 import org.junit.Test;
 
