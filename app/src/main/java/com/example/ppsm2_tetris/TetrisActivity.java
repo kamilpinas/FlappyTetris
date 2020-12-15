@@ -26,7 +26,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 700;
+    final int timerGap = 400;
 
     int[][] mArMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -144,7 +144,7 @@ public class TetrisActivity extends View {
     boolean checkBlockSafe(int[][] arNewBlock, Point posBlock) {
         for (int i = 0; i < mNewBlockArea; i++) {
             for (int j = 0; j < mNewBlockArea; j++) {
-                if (arNewBlock[i][j] == 0)
+                if (arNewBlock[i][j] == 0)//granice matrixa, 0 to caly matrix
                     continue;
                 int x = posBlock.x + j;
                 int y = posBlock.y + i;
@@ -155,21 +155,23 @@ public class TetrisActivity extends View {
         return true;
     }
 
-    boolean checkCellSafe(int x, int y) {
+    boolean checkCellSafe(int x, int y) {//ZEBY NIE UMIESCIC KLOCKA POZA EKRANEM - POZA CELL/ POZA MATRIX
         if (x < 0)
             return false;
         if (x >= MatrixSizeWidth)
             return false;
         if (y < 0)
             return false;
-        if (y >= MatrixSizeHeight)
-            return true;
+        if(x>=MatrixSizeWidth+4)
+            return false;
+        if (y >= MatrixSizeHeight)//to na false blokuje przekroczenie gornej krawedzi
+            return false;//
         if (mArMatrix[y][x] > 0)
             return false;
         return true;
     }
 
-    void moveNewBlock(int dir, int[][] arNewBlock, Point posBlock) {
+    void moveNewBlock(int dir, int[][] arNewBlock, Point posBlock) {//PORUSZANIE  I OBRACANIE KLOCKA
         switch (dir) {
             case DirRotate:
                 int[][] arRotate = new int[mNewBlockArea][mNewBlockArea];
@@ -282,7 +284,7 @@ public class TetrisActivity extends View {
             }
         }
 
-        mNewBlockPos.set(posBackup.x, posBackup.y);
+        mNewBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka
         return false;
     }
 
@@ -414,7 +416,7 @@ public class TetrisActivity extends View {
 
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
-
+    System.out.println(mNewBlockPos);
             boolean canMove = moveNewBlock(DirRight);
            canMove = moveNewBlock(DirDown);
 
