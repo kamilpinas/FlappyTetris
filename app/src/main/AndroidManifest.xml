@@ -20,10 +20,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".StartGame"
-            android:screenOrientation="landscape"></activity>
-
     </application>
 
 </manifest>
