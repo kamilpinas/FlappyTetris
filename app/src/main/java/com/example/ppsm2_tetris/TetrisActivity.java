@@ -18,8 +18,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class TetrisActivity extends View {
     Context context;
-    final int MatrixSizeH = 18;
-    final int MatrixSizeV = 10;
+    final int MatrixSizeWidth = 18;
+    final int MatrixSizeHeight = 10;
     final int DirRotate = 0;
     final int DirLeft = 1;
     final int DirRight = 2;
@@ -31,9 +31,9 @@ public class TetrisActivity extends View {
     int TimerGapFast = 50;
     int mTimerGap = TimerGapNormal;
 
-    int[][] mArMatrix = new int[MatrixSizeV][MatrixSizeH];
+    int[][] mArMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
-    Point mScreenSize = new Point(0, 0);
+    Point screenSize = new Point(0, 0);
     int mNewBlockArea = 5;
     int[][] mArNewBlock = new int[mNewBlockArea][mNewBlockArea];
     int[][] mArNextBlock = new int[mNewBlockArea][mNewBlockArea];
@@ -43,12 +43,13 @@ public class TetrisActivity extends View {
     SharedPreferences mPref = null;
     int mScore = 0;
     int mTopScore = 0;
+    int velocity = 0, gravity = 3;
 
     Rect getBlockArea(int x, int y) {
         Rect rtBlock = new Rect();
         rtBlock.left = (int) (x * mBlockSize);
         rtBlock.right = (int) (rtBlock.left + mBlockSize);
-        rtBlock.bottom = mScreenSize.y - (int) (y * mBlockSize);
+        rtBlock.bottom = screenSize.y - (int) (y * mBlockSize);
         rtBlock.top = (int) (rtBlock.bottom - mBlockSize);
         return rtBlock;
     }
@@ -66,9 +67,9 @@ public class TetrisActivity extends View {
     }
 
     void initVariables(Canvas canvas) {
-        mScreenSize.x = canvas.getWidth();
-        mScreenSize.y = canvas.getHeight();
-        mBlockSize = mScreenSize.x / MatrixSizeH;
+        screenSize.x = canvas.getWidth();
+        screenSize.y = canvas.getHeight();
+        mBlockSize = screenSize.x / MatrixSizeWidth;
 
         startGame();
     }
@@ -79,8 +80,8 @@ public class TetrisActivity extends View {
                 arBlock[i][j] = 0;
             }
         }
-        mNewBlockPos.x = 0;
-        mNewBlockPos.y = MatrixSizeV - mNewBlockArea;
+        mNewBlockPos.x = 0;//!!!!!!!!!!!!!!!!!!!!!! zeby sie klocek poza ekranem nie pojawil bo od razu game over xD
+        mNewBlockPos.y = MatrixSizeHeight - mNewBlockArea;
 
         int blockType = random(1, 7);
         //blockType = 6;
@@ -160,11 +161,11 @@ public class TetrisActivity extends View {
     boolean checkCellSafe(int x, int y) {
         if (x < 0)
             return false;
-        if (x >= MatrixSizeH)
+        if (x >= MatrixSizeWidth)
             return false;
         if (y < 0)
             return false;
-        if (y >= MatrixSizeV)
+        if (y >= MatrixSizeHeight)
             return true;
         if (mArMatrix[y][x] > 0)
             return false;
@@ -228,9 +229,9 @@ public class TetrisActivity extends View {
         int filledCount = 0;
         boolean bFilled;
 
-        for (int i = 0; i < MatrixSizeV; i++) {
+        for (int i = 0; i < MatrixSizeHeight; i++) {
             bFilled = true;
-            for (int j = 0; j < MatrixSizeH; j++) {
+            for (int j = 0; j < MatrixSizeWidth; j++) {
                 if (mArMatrix[i][j] == 0) {
                     bFilled = false;
                     break;
@@ -240,13 +241,13 @@ public class TetrisActivity extends View {
                 continue;
 
             filledCount++;
-            for (int k = i + 1; k < MatrixSizeV; k++) {
-                for (int j = 0; j < MatrixSizeH; j++) {
+            for (int k = i + 1; k < MatrixSizeHeight; k++) {
+                for (int j = 0; j < MatrixSizeWidth; j++) {
                     mArMatrix[k - 1][j] = mArMatrix[k][j];
                 }
             }
-            for (int j = 0; j < MatrixSizeH; j++) {
-                mArMatrix[MatrixSizeV - 1][j] = 0;
+            for (int j = 0; j < MatrixSizeWidth; j++) {
+                mArMatrix[MatrixSizeHeight - 1][j] = 0;
             }
             i--;
         }
@@ -289,7 +290,7 @@ public class TetrisActivity extends View {
     }
 
     void showScore(Canvas canvas, int score) {
-        int fontSize = mScreenSize.x / 20;
+        int fontSize = screenSize.x / 20;
         Paint pnt = new Paint();
         pnt.setTextSize(fontSize);
         pnt.setARGB(128, 255, 255, 255);
@@ -302,8 +303,8 @@ public class TetrisActivity extends View {
     }
 
     void showMatrix(Canvas canvas, int[][] arMatrix, boolean drawEmpth) {
-        for (int i = 0; i < MatrixSizeV; i++) {
-            for (int j = 0; j < MatrixSizeH; j++) {
+        for (int i = 0; i < MatrixSizeHeight; i++) {
+            for (int j = 0; j < MatrixSizeWidth; j++) {
                 if (arMatrix[i][j] == 0 && drawEmpth == false)
                     continue;
                 showBlockImage(canvas, j, i, arMatrix[i][j]);
@@ -367,8 +368,8 @@ public class TetrisActivity extends View {
     public void startGame() {
         mScore = 0;
 
-        for (int i = 0; i < MatrixSizeV; i++) {
-            for (int j = 0; j < MatrixSizeH; j++) {
+        for (int i = 0; i < MatrixSizeHeight; i++) {
+            for (int j = 0; j < MatrixSizeWidth; j++) {
                 mArMatrix[i][j] = 0;
             }
         }
@@ -418,7 +419,27 @@ public class TetrisActivity extends View {
 
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
+
             boolean canMove = moveNewBlock(DirRight);
+            /*if (mNewBlockPos.y < screenSize.x - 100||velocity<0) {
+                if(mNewBlockPos.y<0){
+                    mNewBlockPos.y= 0;
+                    velocity=0;
+                }
+                if(mNewBlockPos.y>screenSize.y){
+                    mNewBlockPos.y= screenSize.y;
+                }
+                velocity +=gravity;
+                mNewBlockPos.y +=velocity;
+                mNewBlockPos.x+=10;
+                if(mNewBlockPos.x>=screenSize.x){
+                    mNewBlockPos.x=0;
+                }
+            }else{
+                velocity=0;
+            }
+        */
+
             if (!canMove) {
                 copyBlock2Matrix(mArNewBlock, mNewBlockPos);
                 checkLineFilled();
@@ -463,12 +484,12 @@ public class TetrisActivity extends View {
                 Color.argb(128, 255, 128, 100),
                 Color.argb(128, 0, 0, 255),
                 Color.argb(128, 100, 100, 255)};
-        int previewBlockSize = mScreenSize.x / 20;
+        int previewBlockSize = screenSize.x / 20;
 
         Rect rtBlock = new Rect();
         rtBlock.top = (blockY - 1) * previewBlockSize;
         rtBlock.bottom = rtBlock.top + previewBlockSize;
-        rtBlock.left = mScreenSize.x - previewBlockSize * (mNewBlockArea - blockX);
+        rtBlock.left = screenSize.x - previewBlockSize * (mNewBlockArea - blockX);
         rtBlock.right = rtBlock.left + previewBlockSize;
         int crBlock = arColor[blockType];
 
