@@ -26,10 +26,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int TimerGapStart = 1000;
-    int TimerGapNormal = TimerGapStart;
-    int TimerGapFast = 50;
-    int mTimerGap = TimerGapNormal;
+    final int timerGap = 700;
 
     int[][] mArMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -43,7 +40,7 @@ public class TetrisActivity extends View {
     SharedPreferences mPref = null;
     int mScore = 0;
     int mTopScore = 0;
-    int velocity = 0, gravity = 3;
+
 
     Rect getBlockArea(int x, int y) {
         Rect rtBlock = new Rect();
@@ -346,7 +343,6 @@ public class TetrisActivity extends View {
 
     public boolean block2Bottom() {
         mTimerFrame.removeMessages(0);
-        mTimerGap = TimerGapFast;
         mTimerFrame.sendEmptyMessageDelayed(0, 10);
         return true;
     }
@@ -376,7 +372,6 @@ public class TetrisActivity extends View {
 
         addNewBlock(mArNewBlock);
         addNewBlock(mArNextBlock);
-        TimerGapNormal = TimerGapStart;
         mTimerFrame.sendEmptyMessageDelayed(0, 10);
     }
 
@@ -421,39 +416,23 @@ public class TetrisActivity extends View {
         public void handleMessage(Message msg) {//OPADANIE
 
             boolean canMove = moveNewBlock(DirRight);
-            /*if (mNewBlockPos.y < screenSize.x - 100||velocity<0) {
-                if(mNewBlockPos.y<0){
-                    mNewBlockPos.y= 0;
-                    velocity=0;
-                }
-                if(mNewBlockPos.y>screenSize.y){
-                    mNewBlockPos.y= screenSize.y;
-                }
-                velocity +=gravity;
-                mNewBlockPos.y +=velocity;
-                mNewBlockPos.x+=10;
-                if(mNewBlockPos.x>=screenSize.x){
-                    mNewBlockPos.x=0;
-                }
-            }else{
-                velocity=0;
-            }
-        */
+           canMove = moveNewBlock(DirDown);
+
+
+
 
             if (!canMove) {
                 copyBlock2Matrix(mArNewBlock, mNewBlockPos);
                 checkLineFilled();
                 copyBlockArray(mArNextBlock, mArNewBlock);
                 addNewBlock(mArNextBlock);
-                TimerGapNormal -= 2;
-                mTimerGap = TimerGapNormal;
                 if (isGameOver()) {
                     showDialog_GameOver();
                     return;
                 }
             }
 
-            this.sendEmptyMessageDelayed(0, mTimerGap);
+            this.sendEmptyMessageDelayed(0, timerGap);
         }
     };
 
