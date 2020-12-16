@@ -158,11 +158,9 @@ public class TetrisActivity extends View {
     boolean checkCellSafe(int x, int y) {//ZEBY NIE UMIESCIC KLOCKA POZA EKRANEM - POZA CELL/ POZA MATRIX
         if (x < 0)
             return false;
-        if (x >= MatrixSizeWidth)
+        if (x >= MatrixSizeWidth)//przekroczenie prawej krawedzi
             return false;
         if (y < 0)
-            return false;
-        if(x>=MatrixSizeWidth+4)
             return false;
         if (y >= MatrixSizeHeight)//to na false blokuje przekroczenie gornej krawedzi
             return false;//
@@ -230,7 +228,7 @@ public class TetrisActivity extends View {
 
         for (int i = 0; i < MatrixSizeHeight; i++) {
             bFilled = true;
-            for (int j = 0; j < MatrixSizeWidth; j++) {
+            for (int j = 0; j < MatrixSizeHeight; j++) {
                 if (mArMatrix[i][j] == 0) {
                     bFilled = false;
                     break;
@@ -241,11 +239,11 @@ public class TetrisActivity extends View {
 
             filledCount++;
             for (int k = i + 1; k < MatrixSizeHeight; k++) {
-                for (int j = 0; j < MatrixSizeWidth; j++) {
+                for (int j = 0; j < MatrixSizeHeight; j++) {
                     mArMatrix[k - 1][j] = mArMatrix[k][j];
                 }
             }
-            for (int j = 0; j < MatrixSizeWidth; j++) {
+            for (int j = 0; j < MatrixSizeHeight; j++) {
                 mArMatrix[MatrixSizeHeight - 1][j] = 0;
             }
             i--;
