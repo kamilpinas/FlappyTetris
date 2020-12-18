@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
                 break;
             case MotionEvent.ACTION_UP :
                 if( mIsTouchMove == false && mMousePos.x > 0 )
+                    myTetrisActivity.velocity=myTetrisActivity.velocity-40;
                     if(mMousePos.x< mScreenSize.x/2){
                         myTetrisActivity.block2Up();
                     }else{

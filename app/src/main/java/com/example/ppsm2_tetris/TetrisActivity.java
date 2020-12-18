@@ -1,22 +1,32 @@
 package com.example.ppsm2_tetris;
 
+import android.animation.ArgbEvaluator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.graphics.ColorSpace.Model.RGB;
 
 public class TetrisActivity extends View {
+
+    Handler handler;
+    Runnable runnable;
+    final int UPDATE_MILLIS = 16;
+
     Context context;
     final int MatrixSizeWidth = 18;
     final int MatrixSizeHeight = 10;
@@ -41,6 +51,10 @@ public class TetrisActivity extends View {
     int mScore = 0;
     int mTopScore = 0;
 
+    Bitmap[] birds;
+    int birdFrame = 0;
+    int velocity = 0, gravity = 1;
+    int birdXpos, birdYpos;//position
 
     Rect getBlockArea(int x, int y) {
         Rect rtBlock = new Rect();
@@ -59,8 +73,24 @@ public class TetrisActivity extends View {
     public TetrisActivity(Context context) {
         super(context);
         this.context = context;
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                invalidate(); //calls ondraw
+            }
+        };
+
+
         mPref = context.getSharedPreferences("info", MODE_PRIVATE);
         mTopScore = mPref.getInt("TopScore", 0);
+
+        birds = new Bitmap[2];
+        birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
+        birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_upflap);
+        birdXpos = 0 + birds[0].getHeight();//bird starting pos
+        birdYpos = screenSize.y / 2 - birds[0].getHeight() / 2;
+
     }
 
     void initVariables(Canvas canvas) {
@@ -315,6 +345,15 @@ public class TetrisActivity extends View {
         canvas.drawBitmap(mArBmpCell[blockType], null, rtBlock, null);
     }
 
+
+
+    public static Bitmap createBitmap(
+                                      int width,
+                                      int height,
+                                      Bitmap.Config config) {
+        return Bitmap.createBitmap(width, height, config);
+    }
+
     /*** Interface start ***/
 
     public void addCellImage(int index, Bitmap bmp) {
@@ -397,9 +436,42 @@ public class TetrisActivity extends View {
         canvas.drawColor(Color.DKGRAY);
 
         showMatrix(canvas, mArMatrix, true);
-        showNewBlock(canvas);
+         showNewBlock(canvas);
         showScore(canvas, mScore);
         //showNextBlock(canvas, mArNextBlock); // wyświetlenie okna kolejnego klocka
+
+        addBirdControls();
+
+        canvas.drawBitmap(birds[birdFrame], birdXpos, birdYpos, null);
+        handler.postDelayed(runnable, UPDATE_MILLIS);
+
+    }
+
+    void addBirdControls() {
+        if (birdFrame == 0) {
+            birdFrame = 1;
+        } else {
+            birdFrame = 0;
+        }
+        //falling and screen bounds
+        if (birdYpos < screenSize.y - 100 || velocity < 0) {
+            if (birdYpos < 0) {
+                birdYpos = 0;
+                velocity = 0;
+            }
+            if (birdYpos > screenSize.x) {
+                birdYpos = screenSize.x - birds[0].getHeight();
+            }
+            velocity += gravity;
+            birdYpos += velocity;
+            birdXpos += 10;
+            if (birdXpos >= screenSize.x) {
+                birdXpos = 0;
+            }
+        } else {
+            velocity = 0;
+        }
+
     }
 
     void showNewBlock(Canvas canvas) {
@@ -412,14 +484,12 @@ public class TetrisActivity extends View {
         }
     }
 
+
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
-    System.out.println(mNewBlockPos);
+            System.out.println(mNewBlockPos);
             boolean canMove = moveNewBlock(DirRight);
-           canMove = moveNewBlock(DirDown);
-
-
-
+            canMove = moveNewBlock(DirDown);
 
             if (!canMove) {
                 copyBlock2Matrix(mArNewBlock, mNewBlockPos);
