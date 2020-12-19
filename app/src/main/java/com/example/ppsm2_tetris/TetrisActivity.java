@@ -315,7 +315,7 @@ public class TetrisActivity extends View {
             }
         }
 
-        mNewBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka
+        mNewBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka  JAK ZAMIENISZ X I Y TO PRZYKLEJA DO PRAWEJ
         return false;
     }
 
