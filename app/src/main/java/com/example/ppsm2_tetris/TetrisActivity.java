@@ -18,6 +18,8 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import java.util.Arrays;
+
 import static android.content.Context.MODE_PRIVATE;
 import static android.graphics.ColorSpace.Model.RGB;
 
@@ -178,6 +180,7 @@ public class TetrisActivity extends View {
                     continue;
                 int x = posBlock.x + j;
                 int y = posBlock.y + i;
+                System.out.println("pozycja x "+posBlock.x +"pozycja y"+ posBlock.y);
                 if (checkCellSafe(x, y) == false)
                     return false;
             }
@@ -242,9 +245,9 @@ public class TetrisActivity extends View {
     }
 
     void copyBlock2Matrix(int[][] arBlock, Point posBlock) {
-        for (int i = 0; i < mNewBlockArea; i++) {
-            for (int j = 0; j < mNewBlockArea; j++) {
-                if (arBlock[i][j] == 0)
+        for(int i=0; i < mNewBlockArea ; i++) {
+            for(int j=0; j < mNewBlockArea ; j++) {
+                if( arBlock[i][j] == 0 )
                     continue;
                 mArMatrix[posBlock.y + i][posBlock.x + j] = arBlock[i][j];
                 arBlock[i][j] = 0;
@@ -258,7 +261,7 @@ public class TetrisActivity extends View {
 
         for (int i = 0; i < MatrixSizeHeight; i++) {
             bFilled = true;
-            for (int j = 0; j < MatrixSizeHeight; j++) {
+            for (int j = 10; j < MatrixSizeWidth; j++) {
                 if (mArMatrix[i][j] == 0) {
                     bFilled = false;
                     break;
@@ -269,7 +272,7 @@ public class TetrisActivity extends View {
 
             filledCount++;
             for (int k = i + 1; k < MatrixSizeHeight; k++) {
-                for (int j = 0; j < MatrixSizeHeight; j++) {
+                for (int j = 0; j < MatrixSizeWidth; j++) {
                     mArMatrix[k - 1][j] = mArMatrix[k][j];
                 }
             }
