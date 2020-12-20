@@ -1,6 +1,5 @@
 package com.example.ppsm2_tetris;
 
-import android.animation.ArgbEvaluator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,19 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorSpace;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.view.View;
 
-import java.util.Arrays;
-
 import static android.content.Context.MODE_PRIVATE;
-import static android.graphics.ColorSpace.Model.RGB;
 
 public class TetrisActivity extends View {
 
@@ -46,7 +40,7 @@ public class TetrisActivity extends View {
     int mNewBlockArea = 5;
     int[][] mArNewBlock = new int[mNewBlockArea][mNewBlockArea];
     int[][] mArNextBlock = new int[mNewBlockArea][mNewBlockArea];
-    Point mNewBlockPos = new Point(0, 0);
+    Point newBlockPos = new Point(0, 0);
     Bitmap[] mArBmpCell = new Bitmap[8];
     AlertDialog mDlgMsg = null;
     SharedPreferences mPref = null;
@@ -109,11 +103,11 @@ public class TetrisActivity extends View {
                 arBlock[i][j] = 0;
             }
         }
-        mNewBlockPos.x = 0;//!!!!!!!!!!!!!!!!!!!!!! zeby sie klocek poza ekranem nie pojawil bo od razu game over xD
-        mNewBlockPos.y = MatrixSizeHeight - mNewBlockArea;
+        newBlockPos.x = 0;//!!!!!!!!!!!!!!!!!!!!!! zeby sie klocek poza ekranem nie pojawil bo od razu game over xD
+        newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        //blockType = 6;
+        blockType = 4;
 
         switch (blockType) {
             case 1:
@@ -283,6 +277,7 @@ public class TetrisActivity extends View {
         }
 
 
+
         mScore += filledCount * filledCount;
         if (mTopScore < mScore) {
             mTopScore = mScore;
@@ -294,16 +289,16 @@ public class TetrisActivity extends View {
     }
 
     boolean isGameOver() {
-        boolean canMove = checkBlockSafe(mArNewBlock, mNewBlockPos);
+        boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
         return !canMove;
     }
 
     boolean moveNewBlock(int dir) {
         int[][] arBackup = duplicateBlockArray(mArNewBlock);
-        Point posBackup = new Point(mNewBlockPos);
+        Point posBackup = new Point(newBlockPos);
 
-        moveNewBlock(dir, mArNewBlock, mNewBlockPos);
-        boolean canMove = checkBlockSafe(mArNewBlock, mNewBlockPos);
+        moveNewBlock(dir, mArNewBlock, newBlockPos);
+        boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
         if (canMove) {
             redraw();
             return true;
@@ -315,7 +310,7 @@ public class TetrisActivity extends View {
             }
         }
 
-        mNewBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka  JAK ZAMIENISZ X I Y TO PRZYKLEJA DO PRAWEJ
+        newBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka  JAK ZAMIENISZ X I Y TO PRZYKLEJA DO PRAWEJ
         return false;
     }
 
@@ -462,8 +457,8 @@ public class TetrisActivity extends View {
                 birdYpos = 0;
                 velocity = 0;
             }
-            if (birdYpos > screenSize.x) {
-                birdYpos = screenSize.x - birds[0].getHeight();
+            if (birdYpos > screenSize.y) {
+                birdYpos = screenSize.y - birds[0].getHeight();
             }
             velocity += gravity;
             birdYpos += velocity;
@@ -482,7 +477,7 @@ public class TetrisActivity extends View {
             for (int j = 0; j < mNewBlockArea; j++) {
                 if (mArNewBlock[i][j] == 0)
                     continue;
-                showBlockImage(canvas, mNewBlockPos.x + j, mNewBlockPos.y + i, mArNewBlock[i][j]);
+                showBlockImage(canvas, newBlockPos.x + j, newBlockPos.y + i, mArNewBlock[i][j]);
             }
         }
     }
@@ -490,12 +485,12 @@ public class TetrisActivity extends View {
 
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
-            System.out.println(mNewBlockPos);
+            System.out.println(newBlockPos);
             boolean canMove = moveNewBlock(DirRight);
             canMove = moveNewBlock(DirDown);
 
             if (!canMove) {
-                copyBlock2Matrix(mArNewBlock, mNewBlockPos);
+                copyBlock2Matrix(mArNewBlock, newBlockPos);
                 checkLineFilled();
                 copyBlockArray(mArNextBlock, mArNewBlock);
                 addNewBlock(mArNextBlock);
