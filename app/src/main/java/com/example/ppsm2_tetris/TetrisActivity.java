@@ -32,7 +32,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 400;
+    final int timerGap = 200;
 
     int[][] mArMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -107,7 +107,7 @@ public class TetrisActivity extends View {
         newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        blockType = 4;
+        //blockType = 4; // DO TESTOWANIA
 
         switch (blockType) {
             case 1:
@@ -174,7 +174,6 @@ public class TetrisActivity extends View {
                     continue;
                 int x = posBlock.x + j;
                 int y = posBlock.y + i;
-                System.out.println("pozycja x "+posBlock.x +"pozycja y"+ posBlock.y);
                 if (checkCellSafe(x, y) == false)
                     return false;
             }
@@ -270,9 +269,7 @@ public class TetrisActivity extends View {
                     mArMatrix[k - 1][j] = mArMatrix[k][j];
                 }
             }
-            for (int j = 0; j < MatrixSizeHeight; j++) {
-                mArMatrix[MatrixSizeHeight - 1][j] = 0;
-            }
+
             i--;
         }
 
@@ -294,7 +291,7 @@ public class TetrisActivity extends View {
     }
 
     boolean moveNewBlock(int dir) {
-        int[][] arBackup = duplicateBlockArray(mArNewBlock);
+
         Point posBackup = new Point(newBlockPos);
 
         moveNewBlock(dir, mArNewBlock, newBlockPos);
@@ -304,11 +301,13 @@ public class TetrisActivity extends View {
             return true;
         }
 
+        /*
+                int[][] arBackup = duplicateBlockArray(mArNewBlock);
         for (int i = 0; i < mNewBlockArea; i++) {
             for (int j = 0; j < mNewBlockArea; j++) {
-                mArNewBlock[i][j] = arBackup[i][j];
+                mArNewBlock[j][i] = arBackup[i][j];///tez przyukelajnei do prawej
             }
-        }
+        }*/
 
         newBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka  JAK ZAMIENISZ X I Y TO PRZYKLEJA DO PRAWEJ
         return false;
@@ -485,9 +484,9 @@ public class TetrisActivity extends View {
 
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
-            System.out.println(newBlockPos);
             boolean canMove = moveNewBlock(DirRight);
-            canMove = moveNewBlock(DirDown);
+            moveNewBlock(DirDown);
+        //    canMove = moveNewBlock(DirDown);
 
             if (!canMove) {
                 copyBlock2Matrix(mArNewBlock, newBlockPos);
