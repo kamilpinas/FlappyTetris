@@ -14,4 +14,11 @@
         android:layout_centerInParent="true"
         android:onClick="startGame"
         android:src="@android:drawable/ic_media_play" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="609dp"
+        android:layout_height="139dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/flappy_logo" />
 </RelativeLayout>

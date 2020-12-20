@@ -15,6 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
+import java.lang.reflect.Array;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class TetrisActivity extends View {
@@ -32,7 +34,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 200;
+    final int timerGap = 300;
 
     int[][] mArMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -238,9 +240,9 @@ public class TetrisActivity extends View {
     }
 
     void copyBlock2Matrix(int[][] arBlock, Point posBlock) {
-        for(int i=0; i < mNewBlockArea ; i++) {
-            for(int j=0; j < mNewBlockArea ; j++) {
-                if( arBlock[i][j] == 0 )
+        for (int i = 0; i < mNewBlockArea; i++) {
+            for (int j = 0; j < mNewBlockArea; j++) {
+                if (arBlock[i][j] == 0)
                     continue;
                 mArMatrix[posBlock.y + i][posBlock.x + j] = arBlock[i][j];
                 arBlock[i][j] = 0;
@@ -251,28 +253,31 @@ public class TetrisActivity extends View {
     int checkLineFilled() {
         int filledCount = 0;
         boolean bFilled;
-
-        for (int i = 0; i < MatrixSizeHeight; i++) {
+        for (int y = 0; y < MatrixSizeHeight; y++) {// dla calej wysokosci
             bFilled = true;
-            for (int j = 10; j < MatrixSizeWidth; j++) {
-                if (mArMatrix[i][j] == 0) {
-                    bFilled = false;
-                    break;
+            for (int x = 0; x < MatrixSizeHeight; x++) {//sprawdza wiersz
+                for (int k = 0; k < MatrixSizeHeight; k++) {//sprawdza wiersz
+                    System.out.println(mArMatrix[0][17]);//!!!! DOLNY PRAWY ROG
+                    if (mArMatrix[x][k] == 0) {// jesli w wierszu i  nie ma to wraca do false
+                        bFilled = false;//TODO::
+                        break;
+                    }
                 }
             }
-            if (bFilled == false)
-                continue;
+            if (bFilled == false)//ten nie byl pelny
+                continue;//// wiec sprawdza kolejny wiersz
 
             filledCount++;
-            for (int k = i + 1; k < MatrixSizeHeight; k++) {
-                for (int j = 0; j < MatrixSizeWidth; j++) {
-                    mArMatrix[k - 1][j] = mArMatrix[k][j];
+            for (int k = y + 1; k < MatrixSizeHeight; k++) {
+                for (int j = 0; j < MatrixSizeHeight; j++) {
+                    mArMatrix[j][k] = mArMatrix[j][k];
                 }
             }
-
-            i--;
+            for (int j = 0; j < MatrixSizeHeight; j++) {
+                mArMatrix[MatrixSizeHeight - 1][j] = 0;
+            }
+            y--;
         }
-
 
 
         mScore += filledCount * filledCount;
@@ -343,11 +348,10 @@ public class TetrisActivity extends View {
     }
 
 
-
     public static Bitmap createBitmap(
-                                      int width,
-                                      int height,
-                                      Bitmap.Config config) {
+            int width,
+            int height,
+            Bitmap.Config config) {
         return Bitmap.createBitmap(width, height, config);
     }
 
@@ -430,10 +434,9 @@ public class TetrisActivity extends View {
     public void onDraw(Canvas canvas) {
         if (mBlockSize < 1)
             initVariables(canvas);
-        canvas.drawColor(Color.DKGRAY);
 
-        showMatrix(canvas, mArMatrix, true);
-         showNewBlock(canvas);
+       showMatrix(canvas, mArMatrix, false);
+        showNewBlock(canvas);
         showScore(canvas, mScore);
         //showNextBlock(canvas, mArNextBlock); // wyświetlenie okna kolejnego klocka
 
@@ -486,7 +489,7 @@ public class TetrisActivity extends View {
         public void handleMessage(Message msg) {//OPADANIE
             boolean canMove = moveNewBlock(DirRight);
             moveNewBlock(DirDown);
-        //    canMove = moveNewBlock(DirDown);
+            //    canMove = moveNewBlock(DirDown);
 
             if (!canMove) {
                 copyBlock2Matrix(mArNewBlock, newBlockPos);
