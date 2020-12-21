@@ -15,8 +15,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
-import java.lang.reflect.Array;
-
 import static android.content.Context.MODE_PRIVATE;
 
 public class TetrisActivity extends View {
@@ -34,9 +32,9 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 300;
+    final int timerGap = 200;
 
-    int[][] mArMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
+    int[][] blocksMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
     Point screenSize = new Point(0, 0);
     int mNewBlockArea = 5;
@@ -109,7 +107,7 @@ public class TetrisActivity extends View {
         newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        //blockType = 4; // DO TESTOWANIA
+        blockType = 4; // DO TESTOWANIA
 
         switch (blockType) {
             case 1:
@@ -192,7 +190,7 @@ public class TetrisActivity extends View {
             return false;
         if (y >= MatrixSizeHeight)//to na false blokuje przekroczenie gornej krawedzi
             return false;//
-        if (mArMatrix[y][x] > 0)
+        if (blocksMatrix[y][x] > 0)
             return false;
         return true;
     }
@@ -227,7 +225,6 @@ public class TetrisActivity extends View {
         }
     }
 
-
     int[][] duplicateBlockArray(int[][] arBlock) {
         int size1 = mNewBlockArea, size2 = mNewBlockArea;
         int[][] arClone = new int[size1][size2];
@@ -244,7 +241,7 @@ public class TetrisActivity extends View {
             for (int j = 0; j < mNewBlockArea; j++) {
                 if (arBlock[i][j] == 0)
                     continue;
-                mArMatrix[posBlock.y + i][posBlock.x + j] = arBlock[i][j];
+                blocksMatrix[posBlock.y + i][posBlock.x + j] = arBlock[i][j];
                 arBlock[i][j] = 0;
             }
         }
@@ -253,30 +250,34 @@ public class TetrisActivity extends View {
     int checkLineFilled() {
         int filledCount = 0;
         boolean bFilled;
-        for (int y = 0; y < MatrixSizeHeight; y++) {// dla calej wysokosci
+
+        int x = 0;
+        for (int y = 0; y < MatrixSizeWidth; y++) {
             bFilled = true;
-            for (int x = 0; x < MatrixSizeHeight; x++) {//sprawdza wiersz
-                for (int k = 0; k < MatrixSizeHeight; k++) {//sprawdza wiersz
-                    System.out.println(mArMatrix[0][17]);//!!!! DOLNY PRAWY ROG
-                    if (mArMatrix[x][k] == 0) {// jesli w wierszu i  nie ma to wraca do false
-                        bFilled = false;//TODO::
-                        break;
-                    }
+            for (x = 0; x < MatrixSizeHeight; x++) {
+                if (blocksMatrix[x][y] == 0) {// jesli JEST PRZERWA W kolumnie  to wraca do false
+                    bFilled = false;// TO DZIALA BO JAK JEST CALA KOLUMNA TO ZWRACA TRUE
+                    break;
+
                 }
             }
+            System.out.println(bFilled + "!!!!!!!!!!!!!!!!!!!");
             if (bFilled == false)//ten nie byl pelny
-                continue;//// wiec sprawdza kolejny wiersz
+                continue;//// wiec sprawdza kolejny wiersz - for wyzej
 
             filledCount++;
-            for (int k = y + 1; k < MatrixSizeHeight; k++) {
-                for (int j = 0; j < MatrixSizeHeight; j++) {
-                    mArMatrix[j][k] = mArMatrix[j][k];
+            for (int y2 = y + 1; y2 < MatrixSizeWidth - 1; y2++) {
+                for (int x2 = 0; x2 < MatrixSizeHeight; x2++) {
+                    blocksMatrix[x2][y2 + 1] = blocksMatrix[x2][y2];// i przesuwa
                 }
             }
-            for (int j = 0; j < MatrixSizeHeight; j++) {
-                mArMatrix[MatrixSizeHeight - 1][j] = 0;
+
+            for (int j = 0; j < MatrixSizeHeight; j++) {//usuwanie
+                blocksMatrix[j][MatrixSizeWidth - 1] = 0;// to chyba dziala
             }
-            y--;
+
+
+            x--;
         }
 
 
@@ -355,8 +356,6 @@ public class TetrisActivity extends View {
         return Bitmap.createBitmap(width, height, config);
     }
 
-    /*** Interface start ***/
-
     public void addCellImage(int index, Bitmap bmp) {
         mArBmpCell[index] = bmp;
     }
@@ -406,7 +405,7 @@ public class TetrisActivity extends View {
 
         for (int i = 0; i < MatrixSizeHeight; i++) {
             for (int j = 0; j < MatrixSizeWidth; j++) {
-                mArMatrix[i][j] = 0;
+                blocksMatrix[i][j] = 0;
             }
         }
 
@@ -414,8 +413,6 @@ public class TetrisActivity extends View {
         addNewBlock(mArNextBlock);
         mTimerFrame.sendEmptyMessageDelayed(0, 10);
     }
-
-    /*** Interface end ***/
 
     void showDialog_GameOver() {
         mDlgMsg = new AlertDialog.Builder(context)
@@ -435,7 +432,7 @@ public class TetrisActivity extends View {
         if (mBlockSize < 1)
             initVariables(canvas);
 
-       showMatrix(canvas, mArMatrix, false);
+        showMatrix(canvas, blocksMatrix, false);
         showNewBlock(canvas);
         showScore(canvas, mScore);
         //showNextBlock(canvas, mArNextBlock); // wyświetlenie okna kolejnego klocka
@@ -483,7 +480,6 @@ public class TetrisActivity extends View {
             }
         }
     }
-
 
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
@@ -547,5 +543,4 @@ public class TetrisActivity extends View {
         pnt.setColor(crBlock);
         canvas.drawRect(rtBlock, pnt);
     }
-
 }
