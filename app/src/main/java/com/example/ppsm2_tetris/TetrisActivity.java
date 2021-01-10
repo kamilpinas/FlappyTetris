@@ -32,7 +32,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 600;
+    final int timerGap = 300;
 
     int[][] blocksMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -484,7 +484,9 @@ public class TetrisActivity extends View {
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
             boolean canMove = moveNewBlock(DirRight);
-            moveNewBlock(DirDown);
+            if (canMove) {
+                moveNewBlock(DirDown);
+            }
             //    canMove = moveNewBlock(DirDown);
 
             if (!canMove) {
