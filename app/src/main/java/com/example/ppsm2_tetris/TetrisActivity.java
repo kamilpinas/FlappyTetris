@@ -32,7 +32,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 200;
+    final int timerGap = 600;
 
     int[][] blocksMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
