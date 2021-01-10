@@ -112,7 +112,7 @@ public class TetrisActivity extends View {
         newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        blockType = 4; // DO TESTOWANIA
+        //blockType = 4; // DO TESTOWANIA
 
         switch (blockType) {
             case 1:
@@ -273,25 +273,10 @@ public class TetrisActivity extends View {
         }
         System.out.println(fullColumns.toString());
 
-        for (Integer element : fullColumns) {
-
-            int[][] temp = new int[blocksMatrix.length][];
-
-            for (int i = 0; i < blocksMatrix.length; i++) {
-                temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
-            }
-
-            for (int j =0; j<MatrixSizeHeight; j++) {
-                for (int k = element; k >1; k--) {
-                    blocksMatrix[j][k] = temp[j][k-1];
-                    System.out.println("lol");
-                }
-            }
-            for (int j = MatrixSizeHeight-1; j>=0; j--) {
-                blocksMatrix[j][0] = 0;
-            }
-
+        for(Integer element: fullColumns){
+            deleteColumn(element);
         }
+
         mScore += fullColumns.size() * 10 + 5;
         if (mTopScore < mScore) {
             mTopScore = mScore;
@@ -300,6 +285,27 @@ public class TetrisActivity extends View {
             edit.commit();
         }
         return filledCount;
+    }
+
+    void deleteColumn(int index){
+
+
+            int[][] temp = new int[blocksMatrix.length][];
+
+            for (int i = 0; i < blocksMatrix.length; i++) {
+                temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
+            }
+
+            for (int j =0; j<MatrixSizeHeight; j++) {
+                for (int k = index; k >1; k--) {
+                    blocksMatrix[j][k] = temp[j][k-1];
+                    System.out.println("lol");
+                }
+            }
+            for (int j = MatrixSizeHeight-1; j>=0; j--) {
+                blocksMatrix[j][0] = 0;
+            }
+
     }
 
 
