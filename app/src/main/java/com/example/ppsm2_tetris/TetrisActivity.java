@@ -271,7 +271,7 @@ public class TetrisActivity extends View {
                 fullColumns.add(x);
             }
         }
-            System.out.println(fullColumns.toString());
+        System.out.println(fullColumns.toString());
 
         for (Integer element : fullColumns) {
 
@@ -301,6 +301,7 @@ public class TetrisActivity extends View {
         }
         return filledCount;
     }
+
 
     boolean isGameOver() {
         boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
