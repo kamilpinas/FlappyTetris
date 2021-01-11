@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+    tools:context=".LevelActivity"
+    android:background="@drawable/background_day"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_day"
+        tools:context=".MainActivity">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="609dp"
+            android:layout_height="139dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/flappy_logo" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignEnd="@+id/imageView"
+            android:layout_alignRight="@+id/imageView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="263dp"
+            android:layout_marginLeft="263dp"
+            android:layout_marginTop="145dp"
+            android:layout_marginEnd="207dp"
+            android:layout_marginRight="207dp"
+            android:layout_marginBottom="240dp"
+            android:text="Choose difficulty level:"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="96dp"
+            android:layout_height="34dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="315dp"
+            android:layout_marginLeft="315dp"
+            android:layout_marginEnd="320dp"
+            android:layout_marginRight="690dp"
+            android:layout_marginBottom="192dp"
+            android:onClick="returnMenu"
+            android:text="EASY" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="96dp"
+            android:layout_height="34dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="314dp"
+            android:layout_marginLeft="314dp"
+            android:layout_marginEnd="321dp"
+            android:layout_marginRight="690dp"
+            android:layout_marginBottom="143dp"
+            android:onClick="returnMenu"
+            android:text="NORMAL" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="96dp"
+            android:layout_height="34dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="315dp"
+            android:layout_marginLeft="315dp"
+            android:layout_marginEnd="320dp"
+            android:layout_marginRight="690dp"
+            android:layout_marginBottom="92dp"
+            android:onClick="returnMenu"
+            android:text="HARD" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

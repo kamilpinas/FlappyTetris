@@ -11,7 +11,7 @@
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
         <activity
-            android:name="com.example.ppsm2_tetris.MenuActivity"
+            android:name=".MenuActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,17 +19,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="landscape">
 
+        </activity>
 
         <activity
-            android:name="com.example.ppsm2_tetris.MainActivity"
+            android:name=".LevelActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
 
     </application>
 

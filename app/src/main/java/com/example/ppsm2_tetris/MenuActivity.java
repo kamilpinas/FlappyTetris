@@ -19,6 +19,12 @@ public class MenuActivity extends Activity {
         finish();
     }
 
+    public void chooseLevel(View view){
+        Intent intent = new Intent(this, LevelActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) { //hiding virtual buttons
         super.onWindowFocusChanged(hasFocus);

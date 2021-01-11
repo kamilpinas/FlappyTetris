@@ -37,7 +37,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 300;
+    final int timerGap = 200;
 
     int[][] blocksMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -273,8 +273,24 @@ public class TetrisActivity extends View {
         }
         System.out.println(fullColumns.toString());
 
-        for(Integer element: fullColumns){
-            deleteColumn(element);
+
+        for(Integer element: fullColumns) {
+
+            int[][] temp = new int[blocksMatrix.length][];
+
+            for (int i = 0; i < blocksMatrix.length; i++) {
+                temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
+            }
+
+            for (int j = 0; j < MatrixSizeHeight; j++) {
+                for (int k = element; k > 1; k--) {
+                    blocksMatrix[j][k] = temp[j][k - 1];
+                    System.out.println("lol");
+                }
+            }
+            for (int j = MatrixSizeHeight - 1; j >= 0; j--) {
+                blocksMatrix[j][0] = 0;
+            }
         }
 
         mScore += fullColumns.size() * 10 + 5;
