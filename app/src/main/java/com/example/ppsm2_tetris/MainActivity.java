@@ -1,10 +1,13 @@
 package com.example.ppsm2_tetris;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +21,8 @@ public class MainActivity extends Activity {
     int mCellSize = 0;
     boolean mIsTouchMove = false;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +35,7 @@ public class MainActivity extends Activity {
         mScreenSize.x = dm.heightPixels;
         mScreenSize.y = dm.widthPixels;
         mCellSize = (int)(mScreenSize.x / 8);
+
 
         initTetrisCtrl();
     }

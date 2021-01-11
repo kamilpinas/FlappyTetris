@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -32,7 +33,6 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 800;
 
     int[][] blocksMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -44,6 +44,8 @@ public class TetrisActivity extends View {
     Bitmap[] mArBmpCell = new Bitmap[8];
     AlertDialog mDlgMsg = null;
     SharedPreferences mPref = null;
+    int timerGap = 500;
+
     int mScore = 0;
     int mTopScore = 0;
 
@@ -66,6 +68,20 @@ public class TetrisActivity extends View {
         return rand;
     }
 
+
+    int setLevel(String level) {
+        switch (level) {
+            case "EASY":
+                return 700;
+            case "NORMAL":
+                return 400;
+            case "HARD":
+                return 200;
+            default:
+                throw new IllegalStateException("Unexpected value: " + level);
+        }
+    }
+
     public TetrisActivity(Context context) {
         super(context);
         this.context = context;
@@ -80,6 +96,10 @@ public class TetrisActivity extends View {
 
         mPref = context.getSharedPreferences("info", MODE_PRIVATE);
         mTopScore = mPref.getInt("TopScore", 0);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        timerGap = setLevel(sharedPref.getString("level", "NORMAL"));
+
 
         birds = new Bitmap[2];
         birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
@@ -421,6 +441,7 @@ public class TetrisActivity extends View {
                 blocksMatrix[i][j] = 0;
             }
         }
+
 
         addNewBlock(mArNewBlock);
         addNewBlock(mArNextBlock);
