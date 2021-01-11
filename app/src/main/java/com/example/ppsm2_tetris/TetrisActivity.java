@@ -8,17 +8,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -37,7 +32,7 @@ public class TetrisActivity extends View {
     final int DirDown = 3;
     final int DirUp = 4;
 
-    final int timerGap = 200;
+    final int timerGap = 800;
 
     int[][] blocksMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double mBlockSize = 0;
@@ -112,7 +107,7 @@ public class TetrisActivity extends View {
         newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        //blockType = 4; // DO TESTOWANIA
+        //   blockType = 4; // DO TESTOWANIA
 
         switch (blockType) {
             case 1:
@@ -203,17 +198,20 @@ public class TetrisActivity extends View {
     void moveNewBlock(int dir, int[][] arNewBlock, Point posBlock) {//PORUSZANIE  I OBRACANIE KLOCKA
         switch (dir) {
             case DirRotate:
-                int[][] arRotate = new int[mNewBlockArea][mNewBlockArea];
-                for (int i = 0; i < mNewBlockArea; i++) {
-                    for (int j = 0; j < mNewBlockArea; j++) {
-                        arRotate[mNewBlockArea - j - 1][i] = arNewBlock[i][j];
+                if (canRotate(DirDown)) { //////// naprawia odwaracanie ale dodatkowo obniza w dol
+                    int[][] arRotate = new int[mNewBlockArea][mNewBlockArea];
+                    for (int i = 0; i < mNewBlockArea; i++) {
+                        for (int j = 0; j < mNewBlockArea; j++) {
+                            arRotate[mNewBlockArea - j - 1][i] = arNewBlock[i][j];
+                        }
+                    }
+                    for (int i = 0; i < mNewBlockArea; i++) {
+                        for (int j = 0; j < mNewBlockArea; j++) {
+                            arNewBlock[i][j] = arRotate[i][j];
+                        }
                     }
                 }
-                for (int i = 0; i < mNewBlockArea; i++) {
-                    for (int j = 0; j < mNewBlockArea; j++) {
-                        arNewBlock[i][j] = arRotate[i][j];
-                    }
-                }
+
                 break;
             case DirLeft:
                 posBlock.x--;
@@ -222,6 +220,7 @@ public class TetrisActivity extends View {
                 posBlock.x++;
                 break;
             case DirDown:
+
                 posBlock.y--;
                 break;
             case DirUp:
@@ -251,49 +250,42 @@ public class TetrisActivity extends View {
             }
         }
     }
+
     int checkLineFilled() {
-
+        int filledCount = 0;
         boolean bFilled;
-        int filledCount=0;
-        ArrayList<Integer> fullColumns=new ArrayList<>();
-        int x,y;
 
-        for (x = MatrixSizeWidth-1; x>0; x--) {
+        int x = 0;
+        for (int y = 0; y < MatrixSizeWidth; y++) {
             bFilled = true;
-            for (y = 0; y < MatrixSizeHeight; y++) {
-
-                if (blocksMatrix[y][x] == 0) {
-                    bFilled = false;
+            for (x = 0; x < MatrixSizeHeight; x++) {
+                if (blocksMatrix[x][y] == 0) {// jesli JEST PRZERWA W kolumnie  to wraca do false
+                    bFilled = false;// TO DZIALA BO JAK JEST CALA KOLUMNA TO ZWRACA TRUE
                     break;
+
                 }
             }
-            if (bFilled == true) {
-                fullColumns.add(x);
-            }
-        }
-        System.out.println(fullColumns.toString());
+            System.out.println(bFilled + "!!!!!!!!!!!!!!!!!!!");
+            if (bFilled == false)//ten nie byl pelny
+                continue;//// wiec sprawdza kolejny wiersz - for wyzej
 
-
-        for(Integer element: fullColumns) {
-
-            int[][] temp = new int[blocksMatrix.length][];
-
-            for (int i = 0; i < blocksMatrix.length; i++) {
-                temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
-            }
-
-            for (int j = 0; j < MatrixSizeHeight; j++) {
-                for (int k = element; k > 1; k--) {
-                    blocksMatrix[j][k] = temp[j][k - 1];
-                    System.out.println("lol");
+            filledCount++;
+            for (int y2 = y + 1; y2 < MatrixSizeWidth - 1; y2++) {
+                for (int x2 = 0; x2 < MatrixSizeHeight; x2++) {
+                    blocksMatrix[x2][y2 + 1] = blocksMatrix[x2][y2];// i przesuwa
                 }
             }
-            for (int j = MatrixSizeHeight - 1; j >= 0; j--) {
-                blocksMatrix[j][0] = 0;
+
+            for (int j = 0; j < MatrixSizeHeight; j++) {//usuwanie
+                blocksMatrix[j][MatrixSizeWidth - 1] = 0;// to chyba dziala
             }
+
+
+            x--;
         }
 
-        mScore += fullColumns.size() * 10 + 5;
+
+        mScore += filledCount * filledCount;
         if (mTopScore < mScore) {
             mTopScore = mScore;
             SharedPreferences.Editor edit = mPref.edit();
@@ -303,43 +295,20 @@ public class TetrisActivity extends View {
         return filledCount;
     }
 
-    void deleteColumn(int index){
-
-
-            int[][] temp = new int[blocksMatrix.length][];
-
-            for (int i = 0; i < blocksMatrix.length; i++) {
-                temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
-            }
-
-            for (int j =0; j<MatrixSizeHeight; j++) {
-                for (int k = index; k >1; k--) {
-                    blocksMatrix[j][k] = temp[j][k-1];
-                    System.out.println("lol");
-                }
-            }
-            for (int j = MatrixSizeHeight-1; j>=0; j--) {
-                blocksMatrix[j][0] = 0;
-            }
-
-    }
-
-
     boolean isGameOver() {
         boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
         return !canMove;
     }
 
     boolean moveNewBlock(int dir) {
-
         Point posBackup = new Point(newBlockPos);
-
         moveNewBlock(dir, mArNewBlock, newBlockPos);
         boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
         if (canMove) {
             redraw();
             return true;
         }
+
 
         /*
                 int[][] arBackup = duplicateBlockArray(mArNewBlock);
@@ -350,6 +319,16 @@ public class TetrisActivity extends View {
         }*/
 
         newBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka  JAK ZAMIENISZ X I Y TO PRZYKLEJA DO PRAWEJ
+        return false;
+    }
+
+    boolean canRotate(int dir) {
+        moveNewBlock(dir, mArNewBlock, newBlockPos);
+        boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
+        if (canMove) {
+            redraw();
+            return true;
+        }
         return false;
     }
 
@@ -521,7 +500,6 @@ public class TetrisActivity extends View {
             if (canMove) {
                 moveNewBlock(DirDown);
             }
-            //    canMove = moveNewBlock(DirDown);
 
             if (!canMove) {
                 copyBlock2Matrix(mArNewBlock, newBlockPos);
