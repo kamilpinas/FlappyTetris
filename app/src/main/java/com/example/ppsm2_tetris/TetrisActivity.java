@@ -111,12 +111,8 @@ public class TetrisActivity extends View {
 
 
         birds = new Bitmap[2];
-        // birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
-        //birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_upflap);
-
-        birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.cell7);
-        birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.cell7);
-
+        birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
+        birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_upflap);
         birdXpos = 0 + birds[0].getHeight();//bird starting pos
         birdYpos = screenSize.y / 2 - birds[0].getHeight() / 2;
 
@@ -485,9 +481,12 @@ public class TetrisActivity extends View {
         canvas.drawBitmap(myBitmap, birdXpos-300, birdYpos-400, null);// wyswietlenie canvasa2(juz jako myBitmap) na glownym canvasie - to dziala
         //TODO::::::::::*/
 
+        addBirdControls();
+        canvas.drawBitmap(birds[birdFrame], birdXpos, birdYpos, null);
+
         showScore(canvas, mScore);
         //showNextBlock(canvas, mArNextBlock); // wyświetlenie okna kolejnego klocka
-        addBirdControls();
+
 
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
@@ -499,7 +498,7 @@ public class TetrisActivity extends View {
             birdFrame = 0;
         }
         //falling and screen bounds
-        if (birdYpos < screenSize.y || velocity < 0) { //300 na sztywno bo taki jest teraz rozmiar canvas2
+        if (birdYpos < screenSize.y -100 || velocity < 0) {
             if (birdYpos < 0) {
                 birdYpos = 0;
                 velocity = 0;
