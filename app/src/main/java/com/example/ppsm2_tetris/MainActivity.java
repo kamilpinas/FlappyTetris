@@ -63,21 +63,6 @@ public class MainActivity extends Activity {
                     mMousePos.y = (int) event.getY();
                 }
                 break;
-            case MotionEvent.ACTION_MOVE :
-                if( mMousePos.y < 0 )
-                    break;
-                if( (event.getY() - mMousePos.y) > mCellSize ) {
-                    myTetrisActivity.block2Down();
-                    mMousePos.x = (int) event.getX();
-                    mMousePos.y = (int) event.getY();
-                    mIsTouchMove = true;
-                } else if( (mMousePos.y - event.getY()) > mCellSize ) {
-                    myTetrisActivity.block2Up();
-                    mMousePos.x = (int) event.getX();
-                    mMousePos.y = (int) event.getY();
-                    mIsTouchMove = true;
-                }
-                break;
             case MotionEvent.ACTION_UP :
                 if( mIsTouchMove == false && mMousePos.x > 0 )
                     myTetrisActivity.velocity=-20;

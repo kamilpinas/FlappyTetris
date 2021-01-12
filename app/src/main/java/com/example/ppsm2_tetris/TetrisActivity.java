@@ -50,7 +50,6 @@ public class TetrisActivity extends View {
     AlertDialog mDlgMsg = null;
     SharedPreferences mPref = null;
     int timerGap = 500;
-
     int mScore = 0;
     int mTopScore = 0;
 
@@ -58,6 +57,11 @@ public class TetrisActivity extends View {
     int birdFrame = 0;
     int velocity = 0, gravity = 1;
     int birdXpos, birdYpos;//position
+
+    /* DO PLYNNEGO PORUSZANIA
+    Bitmap myBitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888); //to daje caly czarny canvas  potem xD
+    Canvas canvas2 = new Canvas(myBitmap);
+     */
 
     Rect getBlockArea(int x, int y) {
         Rect rtBlock = new Rect();
@@ -136,7 +140,7 @@ public class TetrisActivity extends View {
         newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        blockType = 4; // DO TESTOWANIA
+        // blockType = 4; // DO TESTOWANIA
 
         switch (blockType) {
             case 1:
@@ -471,17 +475,15 @@ public class TetrisActivity extends View {
         showMatrix(canvas, blocksMatrix, false);
         showNewBlock(canvas);
 
-        //TODO::::::::::
-        Canvas canvas2 = new Canvas();
-        Bitmap myBitmap = Bitmap.createBitmap((int) 300, (int) 300, Bitmap.Config.RGB_565); //to daje caly czarny canvas  potem xD
+        /*//TODO::::::::::  CANVAS 2 BITMAP //DO PLYNNEGO PORUSZANIA
+        if (blockCount==0 ) {//tylko na 1 klatce doczepia klocek
+            showNewBlock(canvas2);
+            canvas2.setBitmap(myBitmap);
 
-        // Bitmap myBitmap = Bitmap.createBitmap((int) 300, (int) 300, Bitmap.Config.ARGB_8888); //a tutaj juz puste bo wyswietla ale przezroczysty
-        showNewBlock(canvas2);
-        canvas2.setBitmap(myBitmap);//konwersja canvas na bitmap, bo tylko bitmap mozna wyswietlic w glownym canvasie
-
-
-        canvas.drawBitmap(myBitmap, birdXpos, birdYpos, null);// wyswietlenie canvasa2(juz jako myBitmap) na glownym canvasie - to dziala
-        //TODO::::::::::
+        }
+        System.out.println(myBitmap.getHeight()) ;
+        canvas.drawBitmap(myBitmap, birdXpos-300, birdYpos-400, null);// wyswietlenie canvasa2(juz jako myBitmap) na glownym canvasie - to dziala
+        //TODO::::::::::*/
 
         showScore(canvas, mScore);
         //showNextBlock(canvas, mArNextBlock); // wyświetlenie okna kolejnego klocka
@@ -497,7 +499,7 @@ public class TetrisActivity extends View {
             birdFrame = 0;
         }
         //falling and screen bounds
-        if (birdYpos < screenSize.y - 300 || velocity < 0) { //300 na sztywno bo taki jest teraz rozmiar canvas2
+        if (birdYpos < screenSize.y || velocity < 0) { //300 na sztywno bo taki jest teraz rozmiar canvas2
             if (birdYpos < 0) {
                 birdYpos = 0;
                 velocity = 0;
