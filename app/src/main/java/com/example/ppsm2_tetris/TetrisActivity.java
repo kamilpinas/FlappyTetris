@@ -11,6 +11,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -105,7 +107,7 @@ public class TetrisActivity extends View {
 
 
         birds = new Bitmap[2];
-       // birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
+        // birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
         //birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_upflap);
 
         birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.cell7);
@@ -256,17 +258,6 @@ public class TetrisActivity extends View {
         }
     }
 
-    int[][] duplicateBlockArray(int[][] arBlock) {
-        int size1 = mNewBlockArea, size2 = mNewBlockArea;
-        int[][] arClone = new int[size1][size2];
-        for (int i = 0; i < size1; i++) {
-            for (int j = 0; j < size2; j++) {
-                arClone[i][j] = arBlock[i][j];
-            }
-        }
-        return arClone;
-    }
-
     void copyBlock2Matrix(int[][] arBlock, Point posBlock) {
         for (int i = 0; i < mNewBlockArea; i++) {
             for (int j = 0; j < mNewBlockArea; j++) {
@@ -281,7 +272,7 @@ public class TetrisActivity extends View {
     int checkLineFilled() {
 
         boolean bFilled;
-        int count=0;
+        int count = 0;
         int filledCount = 0;
         ArrayList<Integer> fullColumns = new ArrayList<>();
         int x, y;
@@ -310,16 +301,15 @@ public class TetrisActivity extends View {
                 temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
             }
 
-            if(count>0) {
+            if (count > 0) {
 
                 for (int j = 0; j < MatrixSizeHeight; j++) {
-                    for (int k = element+count; k > 1; k--) {
+                    for (int k = element + count; k > 1; k--) {
                         blocksMatrix[j][k] = temp[j][k - 1];
                         System.out.println("lol");
                     }
                 }
-            }
-            else{
+            } else {
                 for (int j = 0; j < MatrixSizeHeight; j++) {
                     for (int k = element; k > 1; k--) {
                         blocksMatrix[j][k] = temp[j][k - 1];
@@ -356,15 +346,6 @@ public class TetrisActivity extends View {
             redraw();
             return true;
         }
-
-
-        /*
-                int[][] arBackup = duplicateBlockArray(mArNewBlock);
-        for (int i = 0; i < mNewBlockArea; i++) {
-            for (int j = 0; j < mNewBlockArea; j++) {
-                mArNewBlock[j][i] = arBackup[i][j];///tez przyukelajnei do prawej
-            }
-        }*/
 
         newBlockPos.set(posBackup.x, posBackup.y);//umieszczanie klocka  JAK ZAMIENISZ X I Y TO PRZYKLEJA DO PRAWEJ
         return false;
@@ -409,13 +390,6 @@ public class TetrisActivity extends View {
         canvas.drawBitmap(mArBmpCell[blockType], null, rtBlock, null);
     }
 
-
-    public static Bitmap createBitmap(
-            int width,
-            int height,
-            Bitmap.Config config) {
-        return Bitmap.createBitmap(width, height, config);
-    }
 
     public void addCellImage(int index, Bitmap bmp) {
         mArBmpCell[index] = bmp;
@@ -496,14 +470,24 @@ public class TetrisActivity extends View {
 
         showMatrix(canvas, blocksMatrix, false);
         showNewBlock(canvas);
+
+        //TODO::::::::::
+        Canvas canvas2 = new Canvas();
+        Bitmap myBitmap = Bitmap.createBitmap((int) 300, (int) 300, Bitmap.Config.RGB_565); //to daje caly czarny canvas  potem xD
+
+        // Bitmap myBitmap = Bitmap.createBitmap((int) 300, (int) 300, Bitmap.Config.ARGB_8888); //a tutaj juz puste bo wyswietla ale przezroczysty
+        showNewBlock(canvas2);
+        canvas2.setBitmap(myBitmap);//konwersja canvas na bitmap, bo tylko bitmap mozna wyswietlic w glownym canvasie
+
+
+        canvas.drawBitmap(myBitmap, birdXpos, birdYpos, null);// wyswietlenie canvasa2(juz jako myBitmap) na glownym canvasie - to dziala
+        //TODO::::::::::
+
         showScore(canvas, mScore);
         //showNextBlock(canvas, mArNextBlock); // wyświetlenie okna kolejnego klocka
-
         addBirdControls();
 
-        canvas.drawBitmap(birds[birdFrame], birdXpos, birdYpos, null);
         handler.postDelayed(runnable, UPDATE_MILLIS);
-
     }
 
     void addBirdControls() {
@@ -513,7 +497,7 @@ public class TetrisActivity extends View {
             birdFrame = 0;
         }
         //falling and screen bounds
-        if (birdYpos < screenSize.y-birds[0].getHeight()|| velocity < 0) {
+        if (birdYpos < screenSize.y - 300 || velocity < 0) { //300 na sztywno bo taki jest teraz rozmiar canvas2
             if (birdYpos < 0) {
                 birdYpos = 0;
                 velocity = 0;
@@ -545,6 +529,7 @@ public class TetrisActivity extends View {
             }
         }
     }
+
 
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
