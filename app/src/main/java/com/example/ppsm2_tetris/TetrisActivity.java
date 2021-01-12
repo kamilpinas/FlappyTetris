@@ -130,7 +130,7 @@ public class TetrisActivity extends View {
         newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        //   blockType = 4; // DO TESTOWANIA
+        blockType = 4; // DO TESTOWANIA
 
         switch (blockType) {
             case 1:
@@ -277,6 +277,7 @@ public class TetrisActivity extends View {
     int checkLineFilled() {
 
         boolean bFilled;
+        int count=0;
         int filledCount = 0;
         ArrayList<Integer> fullColumns = new ArrayList<>();
         int x, y;
@@ -305,12 +306,24 @@ public class TetrisActivity extends View {
                 temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
             }
 
-            for (int j = 0; j < MatrixSizeHeight; j++) {
-                for (int k = element; k > 1; k--) {
-                    blocksMatrix[j][k] = temp[j][k - 1];
-                    System.out.println("lol");
+            if(count>0) {
+
+                for (int j = 0; j < MatrixSizeHeight; j++) {
+                    for (int k = element+count; k > 1; k--) {
+                        blocksMatrix[j][k] = temp[j][k - 1];
+                        System.out.println("lol");
+                    }
                 }
             }
+            else{
+                for (int j = 0; j < MatrixSizeHeight; j++) {
+                    for (int k = element; k > 1; k--) {
+                        blocksMatrix[j][k] = temp[j][k - 1];
+                        System.out.println("lol");
+                    }
+                }
+            }
+            count++;
             for (int j = MatrixSizeHeight - 1; j >= 0; j--) {
                 blocksMatrix[j][0] = 0;
             }
