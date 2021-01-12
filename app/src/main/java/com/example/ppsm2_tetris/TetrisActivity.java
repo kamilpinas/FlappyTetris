@@ -16,6 +16,9 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class TetrisActivity extends View {
@@ -272,40 +275,48 @@ public class TetrisActivity extends View {
     }
 
     int checkLineFilled() {
-        int filledCount = 0;
+
         boolean bFilled;
+        int filledCount = 0;
+        ArrayList<Integer> fullColumns = new ArrayList<>();
+        int x, y;
 
-        int x = 0;
-        for (int y = 0; y < MatrixSizeWidth; y++) {
+        for (x = MatrixSizeWidth - 1; x > 0; x--) {
             bFilled = true;
-            for (x = 0; x < MatrixSizeHeight; x++) {
-                if (blocksMatrix[x][y] == 0) {// jesli JEST PRZERWA W kolumnie  to wraca do false
-                    bFilled = false;// TO DZIALA BO JAK JEST CALA KOLUMNA TO ZWRACA TRUE
+            for (y = 0; y < MatrixSizeHeight; y++) {
+
+                if (blocksMatrix[y][x] == 0) {
+                    bFilled = false;
                     break;
-
                 }
             }
-            System.out.println(bFilled + "!!!!!!!!!!!!!!!!!!!");
-            if (bFilled == false)//ten nie byl pelny
-                continue;//// wiec sprawdza kolejny wiersz - for wyzej
+            if (bFilled == true) {
+                fullColumns.add(x);
+            }
+        }
+        System.out.println(fullColumns.toString());
 
-            filledCount++;
-            for (int y2 = y + 1; y2 < MatrixSizeWidth - 1; y2++) {
-                for (int x2 = 0; x2 < MatrixSizeHeight; x2++) {
-                    blocksMatrix[x2][y2 + 1] = blocksMatrix[x2][y2];// i przesuwa
+
+        for (Integer element : fullColumns) {
+
+            int[][] temp = new int[blocksMatrix.length][];
+
+            for (int i = 0; i < blocksMatrix.length; i++) {
+                temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
+            }
+
+            for (int j = 0; j < MatrixSizeHeight; j++) {
+                for (int k = element; k > 1; k--) {
+                    blocksMatrix[j][k] = temp[j][k - 1];
+                    System.out.println("lol");
                 }
             }
-
-            for (int j = 0; j < MatrixSizeHeight; j++) {//usuwanie
-                blocksMatrix[j][MatrixSizeWidth - 1] = 0;// to chyba dziala
+            for (int j = MatrixSizeHeight - 1; j >= 0; j--) {
+                blocksMatrix[j][0] = 0;
             }
-
-
-            x--;
         }
 
-
-        mScore += filledCount * filledCount;
+        mScore += fullColumns.size() * 10 + 5;
         if (mTopScore < mScore) {
             mTopScore = mScore;
             SharedPreferences.Editor edit = mPref.edit();
