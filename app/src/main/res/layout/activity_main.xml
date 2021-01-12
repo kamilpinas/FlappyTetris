@@ -2,15 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_day">
+    xmlns:scrolling_image_view="http://schemas.android.com/apk/res-auto"
+    >
 
 
-<RelativeLayout
+    <FrameLayout
         android:id="@+id/layoutCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layoutControl">
 
-    </RelativeLayout>
+        <com.q42.android.scrollingimageview.ScrollingImageView
+            android:id="@+id/scrolling_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            scrolling_image_view:speed="0.5dp"
+            scrolling_image_view:src="@drawable/background_day" />
+
+    </FrameLayout>
 
 </RelativeLayout>

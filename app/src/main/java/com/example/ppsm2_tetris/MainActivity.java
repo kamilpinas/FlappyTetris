@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 public class MainActivity extends Activity {
@@ -46,7 +47,7 @@ public class MainActivity extends Activity {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cell0 + i);
             myTetrisActivity.addCellImage(i, bitmap);
         }
-        RelativeLayout layoutCanvas = findViewById(R.id.layoutCanvas);
+        FrameLayout layoutCanvas = findViewById(R.id.layoutCanvas);
         layoutCanvas.addView(myTetrisActivity);
     }
 
@@ -80,12 +81,12 @@ public class MainActivity extends Activity {
             case MotionEvent.ACTION_UP :
                 if( mIsTouchMove == false && mMousePos.x > 0 )
                     myTetrisActivity.velocity=-20;
-                    if(mMousePos.x< mScreenSize.x/2){
-                        myTetrisActivity.block2Up();
-                    }else{
-                        myTetrisActivity.block2Rotate();
+                if(mMousePos.x< mScreenSize.x/2){
+                    myTetrisActivity.block2Up();
+                }else{
+                    myTetrisActivity.block2Rotate();
 
-                    }
+                }
                 mMousePos.set(-1, -1);
                 break;
         }
