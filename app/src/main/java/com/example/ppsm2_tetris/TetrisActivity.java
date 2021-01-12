@@ -78,7 +78,7 @@ public class TetrisActivity extends View {
         switch (level) {
             case "EASY":
                 return 700;
-            case "NORMAL":
+            case "MEDIUM":
                 return 400;
             case "HARD":
                 return 200;
