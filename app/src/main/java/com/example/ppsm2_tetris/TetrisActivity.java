@@ -107,7 +107,7 @@ public class TetrisActivity extends View {
         mTopScore = mPref.getInt("TopScore", 0);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        timerGap = setLevel(sharedPref.getString("level", "NORMAL"));
+        timerGap = setLevel(sharedPref.getString("level", "EASY"));
 
 
         birds = new Bitmap[2];
