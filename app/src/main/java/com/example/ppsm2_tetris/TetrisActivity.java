@@ -105,8 +105,12 @@ public class TetrisActivity extends View {
 
 
         birds = new Bitmap[2];
-        birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
-        birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_upflap);
+       // birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_midflap);
+        //birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.bluebird_upflap);
+
+        birds[0] = BitmapFactory.decodeResource(getResources(), R.drawable.cell7);
+        birds[1] = BitmapFactory.decodeResource(getResources(), R.drawable.cell7);
+
         birdXpos = 0 + birds[0].getHeight();//bird starting pos
         birdYpos = screenSize.y / 2 - birds[0].getHeight() / 2;
 
@@ -509,22 +513,25 @@ public class TetrisActivity extends View {
             birdFrame = 0;
         }
         //falling and screen bounds
-        if (birdYpos < screenSize.y - 100 || velocity < 0) {
+        if (birdYpos < screenSize.y-birds[0].getHeight()|| velocity < 0) {
             if (birdYpos < 0) {
                 birdYpos = 0;
                 velocity = 0;
             }
-            if (birdYpos > screenSize.y) {
-                birdYpos = screenSize.y - birds[0].getHeight();
+            if (birdYpos > screenSize.y) {//dotyka gornej krawedzi
+                birdYpos = screenSize.y;
+//                birdYpos = screenSize.y - birds[0].getHeight(); zeby sie 'odbijal od gory'
             }
             velocity += gravity;
             birdYpos += velocity;
             birdXpos += 10;
             if (birdXpos >= screenSize.x) {
                 birdXpos = 0;
+                birdXpos += 10;
             }
-        } else {
+        } else {//dotyka ziemii
             velocity = 0;
+            birdXpos += 10;
         }
 
     }
