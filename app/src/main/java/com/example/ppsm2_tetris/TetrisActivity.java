@@ -136,7 +136,7 @@ public class TetrisActivity extends View {
         newBlockPos.y = 3;
 
         int blockType = random(1, 7);
-        // blockType = 4; // DO TESTOWANIA
+         blockType = 4; // DO TESTOWANIA
 
         switch (blockType) {
             case 1:
@@ -311,16 +311,15 @@ public class TetrisActivity extends View {
                 }
             } else {
                 for (int j = 0; j < MatrixSizeHeight; j++) {
-                    for (int k = element; k > 1; k--) {
+                    for (int k = element; k > 0; k--) {
                         blocksMatrix[j][k] = temp[j][k - 1];
                         System.out.println("lol");
                     }
+                    blocksMatrix[j][0] = 0;
                 }
             }
             count++;
-            for (int j = MatrixSizeHeight - 1; j >= 0; j--) {
-                blocksMatrix[j][0] = 0;
-            }
+
         }
 
         mScore += fullColumns.size() * 10 + 5;
