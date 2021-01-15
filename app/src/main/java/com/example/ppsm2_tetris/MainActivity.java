@@ -2,6 +2,7 @@ package com.example.ppsm2_tetris;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 public class MainActivity extends Activity {
@@ -22,6 +24,10 @@ public class MainActivity extends Activity {
     int mCellSize = 0;
     boolean mIsTouchMove = false;
 
+    private ImageButton pauseBtn;
+    private ImageButton restartBtn ;
+    private ImageButton resumeBtn ;
+    private ImageButton returnBtn ;
 
 
     @Override
@@ -31,6 +37,10 @@ public class MainActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+         pauseBtn = (ImageButton) findViewById(R.id.pauseButton);
+         restartBtn = (ImageButton) findViewById(R.id.restartButton);
+         resumeBtn = (ImageButton) findViewById(R.id.resumeButton);
+         returnBtn = (ImageButton) findViewById(R.id.returnButton);
 
         DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
         mScreenSize.x = dm.heightPixels;
@@ -89,7 +99,40 @@ public class MainActivity extends Activity {
         super.onRestart();
         myTetrisActivity.restartGame();
     }
+    public void pauseGame(View view) {
+        restartBtn.setVisibility(View.GONE);
+        resumeBtn.setVisibility(View.GONE);
+        returnBtn.setVisibility(View.GONE);
+        super.onPause();
+        myTetrisActivity.pauseGame();
+        pauseBtn.setVisibility(View.GONE);
+        restartBtn.setVisibility(View.VISIBLE);
+        resumeBtn.setVisibility(View.VISIBLE);
+        returnBtn.setVisibility(View.VISIBLE);
+    }
+    public void resumeGame(View view) {
+        super.onResume();
+        myTetrisActivity.mTimerFrame.sendEmptyMessageDelayed(0, 10);
+        pauseBtn.setVisibility(View.VISIBLE);
+        restartBtn.setVisibility(View.GONE);
+        returnBtn.setVisibility(View.GONE);
+        resumeBtn.setVisibility(View.GONE);
+    }
+    public void restartGame(View view) {
 
+        super.onRestart();
+       // myTetrisActivity.restartGame();
+        myTetrisActivity.startGame();
+        pauseBtn.setVisibility(View.VISIBLE);
+        restartBtn.setVisibility(View.GONE);
+        returnBtn.setVisibility(View.GONE);
+        resumeBtn.setVisibility(View.GONE);
+    }
+    public void returnMenu(View view){
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
+        finish();
+    }
     @Override
     public void onWindowFocusChanged(boolean hasFocus) { //hiding virtual buttons
         super.onWindowFocusChanged(hasFocus);

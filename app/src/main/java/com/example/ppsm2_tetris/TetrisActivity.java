@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -426,6 +427,7 @@ public class TetrisActivity extends View {
 
         mTimerFrame.removeMessages(0);
     }
+
 
     public void restartGame() {
         if (mDlgMsg != null)
