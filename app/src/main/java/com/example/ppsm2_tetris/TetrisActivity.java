@@ -11,13 +11,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ImageButton;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +53,7 @@ public class TetrisActivity extends View {
     int timerGap = 500;
     int mScore = 0;
     int mTopScore = 0;
+
 
     Bitmap[] birds;
     int birdFrame = 0;
@@ -362,16 +363,21 @@ public class TetrisActivity extends View {
     }
 
     void showScore(Canvas canvas, int score) {
-        int fontSize = screenSize.x / 20;
-        Paint pnt = new Paint();
-        pnt.setTextSize(fontSize);
-        pnt.setARGB(128, 255, 255, 255);
-        int posX = (int) (fontSize * 0.5);
-        int poxY = (int) (fontSize * 1.5);
-        canvas.drawText("Score : " + mScore, posX, poxY, pnt);
 
-        poxY += (int) (fontSize * 1.5);
-        canvas.drawText("Top Score : " + mTopScore, posX, poxY, pnt);
+        int fontSize = screenSize.x / 10;
+
+        Paint pnt = new Paint();
+
+        pnt.setTextSize(fontSize);
+        pnt.setColor(Color.WHITE);
+        Typeface flappyFont = ResourcesCompat.getFont(context,R.font.flap);
+        pnt.setTypeface(flappyFont); //TODO
+        int posX = (int) (fontSize * 4.8);
+        int poxY = (int) (fontSize * 1.5);
+        canvas.drawText(String.valueOf(mScore), posX, poxY, pnt);
+
+        //poxY += (int) (fontSize * 1.5);
+       // canvas.drawText("Top Score : " + mTopScore, posX, poxY, pnt);
     }
 
     void showMatrix(Canvas canvas, int[][] arMatrix, boolean drawEmpth) {
