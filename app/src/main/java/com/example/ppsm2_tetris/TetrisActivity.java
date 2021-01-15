@@ -459,9 +459,9 @@ public class TetrisActivity extends View {
 
     void showDialog_GameOver() {
         mDlgMsg = new AlertDialog.Builder(context)
-                .setTitle("Notice")
-                .setMessage("Game over! Your score is " + mScore)
-                .setPositiveButton("Again",
+                .setTitle("Game over!")
+                .setMessage("Your score is " + mScore + "\n"+"Top Score is " + mTopScore)
+                .setPositiveButton("Play Again!",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 mDlgMsg = null;
