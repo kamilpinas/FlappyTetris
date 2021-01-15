@@ -13,7 +13,7 @@
         android:id="@+id/layoutCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layoutControl">
+        android:layout_below="@+id/layoutControl">
 
         <com.q42.android.scrollingimageview.ScrollingImageView
             android:id="@+id/scrolling_background"
@@ -21,7 +21,9 @@
             android:layout_height="match_parent"
             scrolling_image_view:speed="0.5dp"
             scrolling_image_view:src="@drawable/background_day" />
-
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
         <ImageButton
             android:id="@+id/pauseButton"
             android:layout_width="113dp"
@@ -39,7 +41,8 @@
             android:layout_marginTop="170dp"
             android:background="@drawable/button_play"
             android:onClick="resumeGame"
-            android:visibility="invisible"/>
+
+            />
 
         <ImageButton
             android:id="@+id/returnButton"
@@ -49,18 +52,21 @@
             android:layout_marginTop="170dp"
             android:background="@drawable/button_return"
             android:onClick="returnMenu"
-            android:visibility="invisible"
-            android:layout_marginStart="50dp" />
+            android:layout_marginStart="50dp"
+            tools:targetApi="lollipop" />
 
         <ImageButton
             android:id="@+id/restartButton"
             android:layout_width="wrap_content"
             android:layout_height="85dp"
+
             android:layout_marginLeft="510dp"
             android:layout_marginTop="170dp"
             android:background="@drawable/button_restart"
             android:onClick="restartGame"
-            android:visibility="invisible"/>
+
+            />
+        </RelativeLayout>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

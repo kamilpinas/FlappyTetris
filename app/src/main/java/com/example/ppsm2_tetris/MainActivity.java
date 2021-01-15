@@ -107,13 +107,17 @@ public class MainActivity extends Activity {
         myTetrisActivity.pauseGame();
         pauseBtn.setVisibility(View.GONE);
         restartBtn.setVisibility(View.VISIBLE);
+        restartBtn.bringToFront();
         resumeBtn.setVisibility(View.VISIBLE);
+        resumeBtn.bringToFront();
         returnBtn.setVisibility(View.VISIBLE);
+        returnBtn.bringToFront();
     }
     public void resumeGame(View view) {
         super.onResume();
         myTetrisActivity.mTimerFrame.sendEmptyMessageDelayed(0, 10);
         pauseBtn.setVisibility(View.VISIBLE);
+        pauseBtn.bringToFront();
         restartBtn.setVisibility(View.GONE);
         returnBtn.setVisibility(View.GONE);
         resumeBtn.setVisibility(View.GONE);
@@ -124,6 +128,7 @@ public class MainActivity extends Activity {
        // myTetrisActivity.restartGame();
         myTetrisActivity.startGame();
         pauseBtn.setVisibility(View.VISIBLE);
+        pauseBtn.bringToFront();
         restartBtn.setVisibility(View.GONE);
         returnBtn.setVisibility(View.GONE);
         resumeBtn.setVisibility(View.GONE);
