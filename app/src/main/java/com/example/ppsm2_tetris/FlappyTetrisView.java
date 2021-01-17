@@ -434,6 +434,10 @@ public class FlappyTetrisView extends View {
     public void restartGame() {
         if (alertMsg != null)
             return;
+        if(!mediaPlayer.isPlaying())
+        {
+            mediaPlayer.start();
+        }
         mTimerFrame.sendEmptyMessageDelayed(0, 1000);
     }
     public void resumeGame() {
