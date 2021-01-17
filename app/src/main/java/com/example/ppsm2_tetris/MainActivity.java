@@ -40,11 +40,9 @@ public class MainActivity extends Activity {
         gameOverView = findViewById(R.id.gameOverBackground);
         pauseBtn.setAlpha(0.5f);
 
-        DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
-        deviceScreenSize.x = dm.heightPixels;
-        deviceScreenSize.y = dm.widthPixels;
+        deviceScreenSize.x = 1920;
+        deviceScreenSize.y = 1080;
         cellSize = (int) (deviceScreenSize.x / 8);
-
 
         startTetrisView();
     }
@@ -59,7 +57,6 @@ public class MainActivity extends Activity {
         FrameLayout layoutCanvas = findViewById(R.id.layoutCanvas);
         layoutCanvas.addView(myTetrisActivity);
     }
-
 
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
@@ -127,7 +124,6 @@ public class MainActivity extends Activity {
     public void restartGame(View view) {
 
         super.onRestart();
-        // myTetrisActivity.restartGame();
         myTetrisActivity.startGame();
         gameOverView.setVisibility(View.INVISIBLE);
         pauseBtn.setVisibility(View.VISIBLE);

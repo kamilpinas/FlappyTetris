@@ -99,7 +99,6 @@ public class FlappyTetrisView extends View {
             }
         };
 
-
         prefs = context.getSharedPreferences("info", MODE_PRIVATE);
         topScore = prefs.getInt("TopScore", 0);
 
@@ -116,8 +115,8 @@ public class FlappyTetrisView extends View {
     }
 
     void initVariables(Canvas canvas) {
-        screenSize.x = canvas.getWidth();
-        screenSize.y = canvas.getHeight();
+        screenSize.x = 1920;
+        screenSize.y = 1080;
         blockSize = screenSize.x / MatrixSizeWidth;
 
         startGame();
@@ -208,14 +207,14 @@ public class FlappyTetrisView extends View {
         return true;
     }
 
-    boolean checkCellSafe(int x, int y) {//ZEBY NIE UMIESCIC KLOCKA POZA EKRANEM - POZA CELL/ POZA MATRIX
+    boolean checkCellSafe(int x, int y) {//ZEBY NIE UMIESCIC KLOCKA POZA MATRIXEM
         if (x < 0)
             return false;
         if (x >= MatrixSizeWidth)//przekroczenie prawej krawedzi
             return false;
         if (y < 0)
             return false;
-        if (y >= MatrixSizeHeight)//to na false blokuje przekroczenie gornej krawedzi
+        if (y >= MatrixSizeHeight)
             return false;//
         if (myMatrix[y][x] > 0)
             return false;
@@ -225,7 +224,7 @@ public class FlappyTetrisView extends View {
     void moveNewBlock(int dir, int[][] arNewBlock, Point posBlock) {//PORUSZANIE  I OBRACANIE KLOCKA
         switch (dir) {
             case DirRotate:
-                if (canRotate(DownDirection)) { //////// naprawia odwaracanie ale dodatkowo obniza w dol
+                if (canRotate(DownDirection)) {
                     int[][] arRotate = new int[blockArraySize][blockArraySize];
                     for (int i = 0; i < blockArraySize; i++) {
                         for (int j = 0; j < blockArraySize; j++) {
@@ -361,7 +360,6 @@ public class FlappyTetrisView extends View {
 
         pnt.setTextSize(fontSize);
         pnt.setColor(Color.WHITE);
-        pnt.setAlpha(125);
         Typeface flappyFont = ResourcesCompat.getFont(context, R.font.flap);
         pnt.setTypeface(flappyFont);
         int posX = (int) (fontSize);
@@ -406,7 +404,6 @@ public class FlappyTetrisView extends View {
         mTimerFrame.removeMessages(0);
     }
 
-
     public void restartGame() {
         if (alertMsg != null)
             return;
@@ -440,7 +437,6 @@ public class FlappyTetrisView extends View {
         background.setVisibility(View.VISIBLE);
         pauseButton.setVisibility(View.INVISIBLE);
         background.bringToFront();
-
     }
 
     public void onDraw(Canvas canvas) {
