@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
@@ -491,9 +492,28 @@ public class FlappyTetrisView extends View {
         showNewBlock(canvas);
 
         addBirdControls();
-        canvas.drawBitmap(birds[birdFrame], birdXpos, birdYpos, null);
 
+        Bitmap canvasBitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
+        Canvas canvas2 = new Canvas(canvasBitmap);
+
+        Paint drawPaint=new Paint();
+        drawPaint.setAntiAlias(true);
+        drawPaint.setStrokeWidth(10);
+        int color = ContextCompat.getColor(context, R.color.white);
+        drawPaint.setColor(color);
+        drawPaint.setStyle(Paint.Style.STROKE);
+        drawPaint.setStrokeJoin(Paint.Join.ROUND);
+        drawPaint.setStrokeCap(Paint.Cap.ROUND);
+
+
+        canvas2.drawLine(1920,0,1920,1080,drawPaint);
+
+        canvas2.setBitmap(canvasBitmap);
+
+        canvas.drawBitmap(birds[birdFrame], birdXpos, birdYpos, null);
+        canvas.drawBitmap(canvasBitmap, 0, 0, null);
         showScore(canvas, myScore);
+
 
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
