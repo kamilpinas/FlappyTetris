@@ -1,5 +1,6 @@
 package com.example.ppsm2_tetris;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,7 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -26,7 +27,7 @@ import java.util.Arrays;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class TetrisActivity extends View {
+public class FlappyTetrisView extends View {
 
     Handler handler;
     Runnable runnable;
@@ -87,7 +88,7 @@ public class TetrisActivity extends View {
         }
     }
 
-    public TetrisActivity(Context context) {
+    public FlappyTetrisView(Context context) {
         super(context);
         this.context = context;
         handler = new Handler();
@@ -121,6 +122,7 @@ public class TetrisActivity extends View {
 
         startGame();
     }
+    
 
     void addNewBlock(int[][] arBlock) {
         for (int i = 0; i < blockArraySize; i++) {
@@ -392,10 +394,6 @@ public class TetrisActivity extends View {
         return moveNewBlock(UpDirection);
     }
 
-    public boolean block2Down() {
-        return moveNewBlock(DownDirection);
-    }
-
     public boolean block2Rotate() {
         return moveNewBlock(DirRotate);
     }
@@ -429,31 +427,18 @@ public class TetrisActivity extends View {
         mTimerFrame.sendEmptyMessageDelayed(0, 10);
     }
 
-    void showDialog_GameOver() {
-//        alertMsg = new AlertDialog.Builder(context)
-//                .setTitle("Game over!")
-//                .setMessage("Your score is " + myScore + "\n" + "Top Score is " + topScore)
-//                .setPositiveButton("Play Again!",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                alertMsg = null;
-//                                startGame();
-//                            }
-//                        })
-//                .show();
+    @SuppressLint("SetTextI18n")
+    void showGameResults() {
 
-
-
-        ImageView gameOver = (ImageView) ((Activity)context).findViewById(R.id.gameOverView);
-        TextView score = (TextView) ((Activity)context).findViewById(R.id.myScoreTextView);
-
-
-        gameOver.setVisibility(View.VISIBLE);
-        gameOver.bringToFront();
-
-        score.setText("Your score: "+ myScore);
-        score.setVisibility(View.VISIBLE);
-        score.bringToFront();
+        TextView score = (TextView) ((Activity) context).findViewById(R.id.myScoreTextView);
+        TextView topScoreView = (TextView) ((Activity) context).findViewById(R.id.topScoreTextView);
+        View background = (View) ((Activity) context).findViewById(R.id.gameOverBackground);
+        ImageButton pauseButton = (ImageButton) ((Activity) context).findViewById(R.id.pauseButton);
+        score.setText("Your score: " + myScore);
+        topScoreView.setText("Top score: " + topScore);
+        background.setVisibility(View.VISIBLE);
+        pauseButton.setVisibility(View.INVISIBLE);
+        background.bringToFront();
 
     }
 
@@ -524,7 +509,7 @@ public class TetrisActivity extends View {
                 copyBlockArray(nextBlock, newBlock);
                 addNewBlock(nextBlock);
                 if (isGameOver()) {
-                    showDialog_GameOver();
+                    showGameResults();
                     return;
                 }
             }

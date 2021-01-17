@@ -12,22 +12,19 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
-    TetrisActivity myTetrisActivity;
-    Point mScreenSize = new Point(0, 0);
-    Point mMousePos = new Point(-1, -1);
-    int mCellSize = 0;
-    boolean mIsTouchMove = false;
+    FlappyTetrisView myTetrisActivity;
+    Point deviceScreenSize = new Point(0, 0);
+    Point mousePosition = new Point(-1, -1);
+    int cellSize = 0;
+    boolean isTouchMove = false;
 
     private ImageButton pauseBtn;
-    private ImageButton restartBtn ;
-    private ImageButton resumeBtn ;
-    private ImageButton returnBtn ;
-    private ImageView gameOver ;
-    private TextView score;
+    private ImageButton restartBtn;
+    private ImageButton resumeBtn;
+    private ImageButton returnBtn;
+    private View gameOverView;
 
 
     @Override
@@ -35,28 +32,27 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-         pauseBtn = (ImageButton) findViewById(R.id.pauseButton);
-         restartBtn = (ImageButton) findViewById(R.id.restartButton);
-         resumeBtn = (ImageButton) findViewById(R.id.resumeButton);
-         returnBtn = (ImageButton) findViewById(R.id.returnButton);
-        gameOver = (ImageView) findViewById(R.id.gameOverView);
-        score=(TextView) findViewById(R.id.myScoreTextView);
+        pauseBtn = (ImageButton) findViewById(R.id.pauseButton);
+        restartBtn = (ImageButton) findViewById(R.id.restartButton);
+        resumeBtn = (ImageButton) findViewById(R.id.resumeButton);
+        returnBtn = (ImageButton) findViewById(R.id.returnButton);
+        gameOverView = findViewById(R.id.gameOverBackground);
+
 
         DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
-        mScreenSize.x = dm.heightPixels;
-        mScreenSize.y = dm.widthPixels;
-        mCellSize = (int)(mScreenSize.x / 8);
+        deviceScreenSize.x = dm.heightPixels;
+        deviceScreenSize.y = dm.widthPixels;
+        cellSize = (int) (deviceScreenSize.x / 8);
 
 
-        initTetrisCtrl();
+        startTetrisView();
     }
 
 
-    void initTetrisCtrl() {
-        myTetrisActivity = new TetrisActivity(this);
-        for(int i=0; i <= 7; i++) {
+    void startTetrisView() {
+        myTetrisActivity = new FlappyTetrisView(this);
+        for (int i = 0; i <= 7; i++) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cell0 + i);
             myTetrisActivity.addCellImage(i, bitmap);
         }
@@ -65,28 +61,27 @@ public class MainActivity extends Activity {
     }
 
 
-
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        switch( event.getAction() ) {
-            case MotionEvent.ACTION_DOWN :
-                mIsTouchMove = false;
-                if( event.getY() < (int)(mScreenSize.y * 0.75)) {
-                    mMousePos.x = (int) event.getX();
-                    mMousePos.y = (int) event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                isTouchMove = false;
+                if (event.getY() < (int) (deviceScreenSize.y * 0.75)) {
+                    mousePosition.x = (int) event.getX();
+                    mousePosition.y = (int) event.getY();
                 }
                 break;
-            case MotionEvent.ACTION_UP :
-                if( mIsTouchMove == false && mMousePos.x > 0 )
-                    myTetrisActivity.velocity=-20;
-                if(mMousePos.x< mScreenSize.x/2){
+            case MotionEvent.ACTION_UP:
+                if (isTouchMove == false && mousePosition.x > 0)
+                    myTetrisActivity.velocity = -20;
+                if (mousePosition.x < deviceScreenSize.x / 2) {
                     myTetrisActivity.block2Up();
-                }else{
+                } else {
                     myTetrisActivity.block2Up();
                     myTetrisActivity.block2Rotate();
 
                 }
-                mMousePos.set(-1, -1);
+                mousePosition.set(-1, -1);
                 break;
         }
         return true;
@@ -103,6 +98,7 @@ public class MainActivity extends Activity {
         super.onRestart();
         myTetrisActivity.restartGame();
     }
+
     public void pauseGame(View view) {
         restartBtn.setVisibility(View.GONE);
         resumeBtn.setVisibility(View.GONE);
@@ -117,6 +113,7 @@ public class MainActivity extends Activity {
         returnBtn.setVisibility(View.VISIBLE);
         returnBtn.bringToFront();
     }
+
     public void resumeGame(View view) {
         super.onResume();
         myTetrisActivity.mTimerFrame.sendEmptyMessageDelayed(0, 10);
@@ -126,11 +123,13 @@ public class MainActivity extends Activity {
         returnBtn.setVisibility(View.GONE);
         resumeBtn.setVisibility(View.GONE);
     }
+
     public void restartGame(View view) {
 
         super.onRestart();
-       // myTetrisActivity.restartGame();
+        // myTetrisActivity.restartGame();
         myTetrisActivity.startGame();
+        gameOverView.setVisibility(View.INVISIBLE);
         pauseBtn.setVisibility(View.VISIBLE);
         pauseBtn.bringToFront();
         restartBtn.setVisibility(View.GONE);
@@ -138,23 +137,12 @@ public class MainActivity extends Activity {
         resumeBtn.setVisibility(View.GONE);
     }
 
-
-    public void endGame() {
-
-//        super.onRestart();
-//        // myTetrisActivity.restartGame();
-//        myTetrisActivity.startGame();
-//        pauseBtn.setVisibility(View.VISIBLE);
-//        pauseBtn.bringToFront();
-//        restartBtn.setVisibility(View.GONE);
-//        returnBtn.setVisibility(View.GONE);
-//        resumeBtn.setVisibility(View.GONE);
-    }
-    public void returnMenu(View view){
+    public void returnMenu(View view) {
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
         finish();
     }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) { //hiding virtual buttons
         super.onWindowFocusChanged(hasFocus);

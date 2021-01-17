@@ -8,7 +8,7 @@ import android.view.View;
 
 public class SplashScreenActivity extends Activity {
 
-    private static final int CZAS = 2000;
+    private static final int TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class SplashScreenActivity extends Activity {
         @Override
         public void run() {
             try {
-                Thread.sleep(CZAS);
+                Thread.sleep(TIME);
             } catch (Exception e) {
                 Log.e("SplashScreen", e.getMessage());
             }
