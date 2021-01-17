@@ -23,7 +23,8 @@
             scrolling_image_view:src="@drawable/background_day" />
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:elevation="2dp">
         <ImageButton
             android:id="@+id/pauseButton"
             android:layout_width="113dp"
@@ -41,6 +42,7 @@
             android:layout_marginTop="170dp"
             android:background="@drawable/button_play"
             android:onClick="resumeGame"
+            android:visibility="invisible"
 
             />
 
@@ -52,8 +54,9 @@
             android:layout_marginTop="170dp"
             android:background="@drawable/button_return"
             android:onClick="returnMenu"
+            android:visibility="invisible"
             android:layout_marginStart="50dp"
-            tools:targetApi="lollipop" />
+             />
 
         <ImageButton
             android:id="@+id/restartButton"
@@ -64,6 +67,7 @@
             android:layout_marginTop="170dp"
             android:background="@drawable/button_restart"
             android:onClick="restartGame"
+            android:visibility="invisible"
 
             />
         </RelativeLayout>
