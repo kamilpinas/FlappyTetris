@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -28,7 +29,7 @@ import java.util.Arrays;
 import static android.content.Context.MODE_PRIVATE;
 
 public class FlappyTetrisView extends View {
-
+    MediaPlayer mediaPlayer;
     Handler handler;
     Runnable runnable;
     final int UPDATE_MILLIS = 16;
@@ -60,6 +61,12 @@ public class FlappyTetrisView extends View {
     int birdFrame = 0;
     int velocity = 0, gravity = 1;
     int birdXpos, birdYpos;//position
+
+
+
+
+
+
 
     Rect getBlockArea(int x, int y) {
         Rect rtBlock = new Rect();
@@ -124,9 +131,11 @@ public class FlappyTetrisView extends View {
     
 
     void addNewBlock(int[][] arBlock) {
+
         for (int i = 0; i < blockArraySize; i++) {
             for (int j = 0; j < blockArraySize; j++) {
                 arBlock[i][j] = 0;
+
             }
         }
         blockPosition.x = 0;//!!!!!!!!!!!!!!!!!!!!!! zeby sie klocek poza ekranem nie pojawil bo od razu game over
@@ -229,11 +238,13 @@ public class FlappyTetrisView extends View {
                     for (int i = 0; i < blockArraySize; i++) {
                         for (int j = 0; j < blockArraySize; j++) {
                             arRotate[blockArraySize - j - 1][i] = arNewBlock[i][j];
+
                         }
                     }
                     for (int i = 0; i < blockArraySize; i++) {
                         for (int j = 0; j < blockArraySize; j++) {
                             arNewBlock[i][j] = arRotate[i][j];
+
                         }
                     }
                 }
@@ -256,18 +267,22 @@ public class FlappyTetrisView extends View {
     }
 
     void copyBlock2Matrix(int[][] arBlock, Point posBlock) {
+        MediaPlayer sfx_hit = MediaPlayer.create(context, R.raw.hit);
+        sfx_hit.setVolume(0.3f,0.3f);
         for (int i = 0; i < blockArraySize; i++) {
             for (int j = 0; j < blockArraySize; j++) {
                 if (arBlock[i][j] == 0)
                     continue;
                 myMatrix[posBlock.y + i][posBlock.x + j] = arBlock[i][j];
                 arBlock[i][j] = 0;
+
+                sfx_hit.start();
             }
         }
     }
 
     int checkLineFilled() {
-
+        MediaPlayer sfx_filled = MediaPlayer.create(context, R.raw.filled);
         boolean bFilled;
         int count = 0;
         int filledCount = 0;
@@ -284,6 +299,7 @@ public class FlappyTetrisView extends View {
                 }
             }
             if (bFilled == true) {
+                sfx_filled.start();
                 fullColumns.add(x);
             }
         }
@@ -325,7 +341,9 @@ public class FlappyTetrisView extends View {
     }
 
     boolean isGameOver() {
+
         boolean canMove = checkBlockSafe(newBlock, blockPosition);
+
         return !canMove;
     }
 
@@ -390,28 +408,50 @@ public class FlappyTetrisView extends View {
 
 
     public boolean block2Up() {
+        MediaPlayer sfx_jump = MediaPlayer.create(context, R.raw.jump);
+        sfx_jump.setVolume(0.3f,0.3f);
+        sfx_jump.start();
         return moveNewBlock(UpDirection);
     }
 
     public boolean block2Rotate() {
+        MediaPlayer sfx_rotate = MediaPlayer.create(context, R.raw.rotate);
+        sfx_rotate.setVolume(0.3f,0.3f);
+        sfx_rotate.start();
         return moveNewBlock(DirRotate);
     }
 
     public void pauseGame() {
+        if(mediaPlayer.isPlaying())
+        {
+            mediaPlayer.pause();
+        }
         if (alertMsg != null)
             return;
-
         mTimerFrame.removeMessages(0);
     }
 
     public void restartGame() {
         if (alertMsg != null)
             return;
-
         mTimerFrame.sendEmptyMessageDelayed(0, 1000);
+    }
+    public void resumeGame() {
+        if (alertMsg != null)
+            return;
+        if(!mediaPlayer.isPlaying())
+        {
+            mediaPlayer.start();
+        }
+        mTimerFrame.sendEmptyMessageDelayed(0, 10);
     }
 
     public void startGame() {
+        mediaPlayer = MediaPlayer.create(context, R.raw.background);
+        mediaPlayer.setVolume(.8f, .8f);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+
         myScore = 0;
 
         for (int i = 0; i < MatrixSizeHeight; i++) {
@@ -501,12 +541,16 @@ public class FlappyTetrisView extends View {
             }
 
             if (!canMove) {
+                MediaPlayer sfx_gameover = MediaPlayer.create(context, R.raw.gameover);
                 copyBlock2Matrix(newBlock, blockPosition);
                 checkLineFilled();
                 copyBlockArray(nextBlock, newBlock);
                 addNewBlock(nextBlock);
                 if (isGameOver()) {
+                    sfx_gameover.start();
                     showGameResults();
+
+
                     return;
                 }
             }

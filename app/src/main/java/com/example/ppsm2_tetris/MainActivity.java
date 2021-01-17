@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -14,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 public class MainActivity extends Activity {
+
     FlappyTetrisView myTetrisActivity;
     Point deviceScreenSize = new Point(0, 0);
     Point mousePosition = new Point(-1, -1);
@@ -40,13 +44,15 @@ public class MainActivity extends Activity {
         gameOverView = findViewById(R.id.gameOverBackground);
         pauseBtn.setAlpha(0.5f);
 
+
+
+
         deviceScreenSize.x = 1920;
         deviceScreenSize.y = 1080;
         cellSize = (int) (deviceScreenSize.x / 8);
 
         startTetrisView();
     }
-
 
     void startTetrisView() {
         myTetrisActivity = new FlappyTetrisView(this);
@@ -101,6 +107,7 @@ public class MainActivity extends Activity {
         resumeBtn.setVisibility(View.GONE);
         returnBtn.setVisibility(View.GONE);
         super.onPause();
+
         myTetrisActivity.pauseGame();
         pauseBtn.setVisibility(View.GONE);
         restartBtn.setVisibility(View.VISIBLE);
@@ -113,7 +120,7 @@ public class MainActivity extends Activity {
 
     public void resumeGame(View view) {
         super.onResume();
-        myTetrisActivity.mTimerFrame.sendEmptyMessageDelayed(0, 10);
+        myTetrisActivity.resumeGame();
         pauseBtn.setVisibility(View.VISIBLE);
         pauseBtn.bringToFront();
         restartBtn.setVisibility(View.GONE);
