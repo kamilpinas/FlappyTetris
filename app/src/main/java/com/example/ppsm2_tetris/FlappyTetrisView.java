@@ -122,8 +122,8 @@ public class FlappyTetrisView extends View {
     }
 
     void initVariables(Canvas canvas) {
-        screenSize.x = 1920;
-        screenSize.y = 1080;
+        screenSize.x = canvas.getWidth();
+        screenSize.y = canvas.getHeight();
         blockSize = screenSize.x / MatrixSizeWidth;
 
         startGame();

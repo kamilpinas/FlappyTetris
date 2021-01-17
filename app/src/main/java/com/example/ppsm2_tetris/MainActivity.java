@@ -47,8 +47,9 @@ public class MainActivity extends Activity {
 
 
 
-        deviceScreenSize.x = 1920;
-        deviceScreenSize.y = 1080;
+        DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
+        deviceScreenSize.x = dm.heightPixels;
+        deviceScreenSize.y = dm.widthPixels;
         cellSize = (int) (deviceScreenSize.x / 8);
 
         startTetrisView();
