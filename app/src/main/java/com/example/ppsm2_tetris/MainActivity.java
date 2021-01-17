@@ -79,6 +79,7 @@ public class MainActivity extends Activity {
                 if(mMousePos.x< mScreenSize.x/2){
                     myTetrisActivity.block2Up();
                 }else{
+                    myTetrisActivity.block2Up();
                     myTetrisActivity.block2Rotate();
 
                 }
