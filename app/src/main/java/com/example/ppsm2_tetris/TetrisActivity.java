@@ -1,8 +1,8 @@
 package com.example.ppsm2_tetris;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +16,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -428,17 +430,31 @@ public class TetrisActivity extends View {
     }
 
     void showDialog_GameOver() {
-        alertMsg = new AlertDialog.Builder(context)
-                .setTitle("Game over!")
-                .setMessage("Your score is " + myScore + "\n" + "Top Score is " + topScore)
-                .setPositiveButton("Play Again!",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                alertMsg = null;
-                                startGame();
-                            }
-                        })
-                .show();
+//        alertMsg = new AlertDialog.Builder(context)
+//                .setTitle("Game over!")
+//                .setMessage("Your score is " + myScore + "\n" + "Top Score is " + topScore)
+//                .setPositiveButton("Play Again!",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                alertMsg = null;
+//                                startGame();
+//                            }
+//                        })
+//                .show();
+
+
+
+        ImageView gameOver = (ImageView) ((Activity)context).findViewById(R.id.gameOverView);
+        TextView score = (TextView) ((Activity)context).findViewById(R.id.myScoreTextView);
+
+
+        gameOver.setVisibility(View.VISIBLE);
+        gameOver.bringToFront();
+
+        score.setText("Your score: "+ myScore);
+        score.setVisibility(View.VISIBLE);
+        score.bringToFront();
+
     }
 
     public void onDraw(Canvas canvas) {

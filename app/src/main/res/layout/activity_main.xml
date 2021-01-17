@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:scrolling_image_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-    tools:context=".MainActivity"
-    android:layout_height="match_parent">
+    tools:context=".MainActivity">
 
     <FrameLayout
         android:id="@+id/layoutCanvas"
@@ -21,55 +20,74 @@
             android:layout_height="match_parent"
             scrolling_image_view:speed="0.5dp"
             scrolling_image_view:src="@drawable/background_day" />
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:elevation="2dp">
-        <ImageButton
-            android:id="@+id/pauseButton"
-            android:layout_width="113dp"
-            android:layout_height="59dp"
-            android:layout_marginLeft="610dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_pause"
-            android:onClick="pauseGame" />
 
-        <ImageButton
-            android:id="@+id/resumeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="85dp"
-            android:layout_marginLeft="280dp"
-            android:layout_marginTop="170dp"
-            android:background="@drawable/button_play"
-            android:onClick="resumeGame"
-            android:visibility="invisible"
+            <ImageView
+                android:id="@+id/gameOverView"
+                android:layout_width="match_parent"
+                android:layout_height="139dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/gameover"
+                android:visibility="invisible" />
 
-            />
+            <ImageButton
+                android:id="@+id/pauseButton"
+                android:layout_width="113dp"
+                android:layout_height="59dp"
+                android:layout_marginLeft="610dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_pause"
+                android:onClick="pauseGame" />
 
-        <ImageButton
-            android:id="@+id/returnButton"
-            android:layout_width="wrap_content"
-            android:layout_height="85dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="170dp"
-            android:background="@drawable/button_return"
-            android:onClick="returnMenu"
-            android:visibility="invisible"
-            android:layout_marginStart="50dp"
-             />
+            <ImageButton
+                android:id="@+id/resumeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="85dp"
+                android:layout_marginLeft="280dp"
+                android:layout_marginTop="170dp"
+                android:background="@drawable/button_play"
+                android:onClick="resumeGame"
+                android:visibility="invisible"
 
-        <ImageButton
-            android:id="@+id/restartButton"
-            android:layout_width="wrap_content"
-            android:layout_height="85dp"
+                />
 
-            android:layout_marginLeft="510dp"
-            android:layout_marginTop="170dp"
-            android:background="@drawable/button_restart"
-            android:onClick="restartGame"
-            android:visibility="invisible"
+            <ImageButton
+                android:id="@+id/returnButton"
+                android:layout_width="wrap_content"
+                android:layout_height="85dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="170dp"
+                android:background="@drawable/button_return"
+                android:onClick="returnMenu"
+                android:visibility="invisible" />
 
-            />
+            <ImageButton
+                android:id="@+id/restartButton"
+                android:layout_width="wrap_content"
+                android:layout_height="85dp"
+
+                android:layout_marginLeft="510dp"
+                android:layout_marginTop="170dp"
+                android:background="@drawable/button_restart"
+                android:onClick="restartGame"
+                android:visibility="invisible"
+
+                />
+
+            <TextView
+                android:id="@+id/myScoreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_marginLeft="280dp"
+                android:layout_marginTop="170dp"
+                android:text="TextView"
+                android:visibility="invisible" />
         </RelativeLayout>
     </FrameLayout>
 

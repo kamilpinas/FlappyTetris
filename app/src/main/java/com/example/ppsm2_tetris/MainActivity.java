@@ -1,21 +1,19 @@
 package com.example.ppsm2_tetris;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
     TetrisActivity myTetrisActivity;
@@ -28,6 +26,8 @@ public class MainActivity extends Activity {
     private ImageButton restartBtn ;
     private ImageButton resumeBtn ;
     private ImageButton returnBtn ;
+    private ImageView gameOver ;
+    private TextView score;
 
 
     @Override
@@ -41,6 +41,8 @@ public class MainActivity extends Activity {
          restartBtn = (ImageButton) findViewById(R.id.restartButton);
          resumeBtn = (ImageButton) findViewById(R.id.resumeButton);
          returnBtn = (ImageButton) findViewById(R.id.returnButton);
+        gameOver = (ImageView) findViewById(R.id.gameOverView);
+        score=(TextView) findViewById(R.id.myScoreTextView);
 
         DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
         mScreenSize.x = dm.heightPixels;
@@ -50,6 +52,7 @@ public class MainActivity extends Activity {
 
         initTetrisCtrl();
     }
+
 
     void initTetrisCtrl() {
         myTetrisActivity = new TetrisActivity(this);
@@ -133,6 +136,19 @@ public class MainActivity extends Activity {
         restartBtn.setVisibility(View.GONE);
         returnBtn.setVisibility(View.GONE);
         resumeBtn.setVisibility(View.GONE);
+    }
+
+
+    public void endGame() {
+
+//        super.onRestart();
+//        // myTetrisActivity.restartGame();
+//        myTetrisActivity.startGame();
+//        pauseBtn.setVisibility(View.VISIBLE);
+//        pauseBtn.bringToFront();
+//        restartBtn.setVisibility(View.GONE);
+//        returnBtn.setVisibility(View.GONE);
+//        resumeBtn.setVisibility(View.GONE);
     }
     public void returnMenu(View view){
         Intent intent = new Intent(this, MenuActivity.class);
