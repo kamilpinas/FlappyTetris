@@ -361,10 +361,11 @@ public class FlappyTetrisView extends View {
 
         pnt.setTextSize(fontSize);
         pnt.setColor(Color.WHITE);
+        pnt.setAlpha(125);
         Typeface flappyFont = ResourcesCompat.getFont(context, R.font.flap);
-        pnt.setTypeface(flappyFont); //TODO
-        int posX = (int) (fontSize * 4.8);
-        int poxY = (int) (fontSize * 1.5);
+        pnt.setTypeface(flappyFont);
+        int posX = (int) (fontSize);
+        int poxY = (int) (fontSize);
         canvas.drawText(String.valueOf(myScore), posX, poxY, pnt);
     }
 

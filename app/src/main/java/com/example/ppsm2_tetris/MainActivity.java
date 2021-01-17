@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         resumeBtn = (ImageButton) findViewById(R.id.resumeButton);
         returnBtn = (ImageButton) findViewById(R.id.returnButton);
         gameOverView = findViewById(R.id.gameOverBackground);
-
+        pauseBtn.setAlpha(0.5f);
 
         DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
         deviceScreenSize.x = dm.heightPixels;

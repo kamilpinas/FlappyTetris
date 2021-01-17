@@ -73,10 +73,10 @@
 
             <LinearLayout
                 android:id="@+id/gameOverBackground"
-                android:layout_width="500dp"
-                android:layout_height="350dp"
+                android:layout_width="550dp"
+                android:layout_height="360dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="25dp"
                 android:background="@drawable/game_over_background"
                 android:orientation="vertical"
                 android:visibility="invisible">
@@ -92,7 +92,7 @@
 
                 <TextView
                     android:id="@+id/myScoreTextView"
-                    android:layout_width="490dp"
+                    android:layout_width="550dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
@@ -107,7 +107,7 @@
 
                 <TextView
                     android:id="@+id/topScoreTextView"
-                    android:layout_width="490dp"
+                    android:layout_width="550dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
@@ -122,7 +122,7 @@
 
             <LinearLayout
                 android:id="@+id/view4"
-                android:layout_width="500dp"
+                android:layout_width="550dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
@@ -131,17 +131,18 @@
 
                 <ImageButton
                     android:id="@+id/returnButton2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="60dp"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginLeft="100dp"
                     android:background="@drawable/button_return"
-                    android:onClick="returnMenu" />
+                    android:onClick="returnMenu"
+                    android:layout_marginStart="100dp" />
 
                 <ImageButton
                     android:id="@+id/restartButton2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="60dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="100dp"
                     android:background="@drawable/button_restart"
                     android:onClick="restartGame"
 
