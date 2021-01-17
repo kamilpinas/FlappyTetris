@@ -11,13 +11,18 @@
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
         <activity
-            android:name=".MenuActivity"
+            android:name=".SplashScreenActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MenuActivity"
+            android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".MainActivity"

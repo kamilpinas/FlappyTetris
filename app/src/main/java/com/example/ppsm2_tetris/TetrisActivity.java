@@ -34,23 +34,23 @@ public class TetrisActivity extends View {
     final int MatrixSizeWidth = 18;
     final int MatrixSizeHeight = 10;
     final int DirRotate = 0;
-    final int DirLeft = 1;
-    final int DirRight = 2;
-    final int DirDown = 3;
-    final int DirUp = 4;
+    final int LeftDirection = 1;
+    final int RightDirection = 2;
+    final int DownDirection = 3;
+    final int UpDirection = 4;
 
-    int[][] blocksMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
+    int[][] myMatrix = new int[MatrixSizeHeight][MatrixSizeWidth];
     double blockSize = 0;
     Point screenSize = new Point(0, 0);
     int blockArraySize = 5;
-    int[][] mArNewBlock = new int[blockArraySize][blockArraySize];
-    int[][] mArNextBlock = new int[blockArraySize][blockArraySize];
-    Point newBlockPos = new Point(0, 0);
-    Bitmap[] mArBmpCell = new Bitmap[8];
+    int[][] newBlock = new int[blockArraySize][blockArraySize];
+    int[][] nextBlock = new int[blockArraySize][blockArraySize];
+    Point blockPosition = new Point(0, 0);
+    Bitmap[] bitmapCell = new Bitmap[8];
     AlertDialog alertMsg = null;
     SharedPreferences prefs = null;
     int timerGap = 500;
-    int mScore = 0;
+    int myScore = 0;
     int topScore = 0;
 
     Bitmap[] birds;
@@ -101,7 +101,7 @@ public class TetrisActivity extends View {
         topScore = prefs.getInt("TopScore", 0);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        timerGap = setLevel(sharedPref.getString("level", "EASY"));
+        timerGap = setLevel(sharedPref.getString("level", "MEDIUM"));
 
 
         birds = new Bitmap[2];
@@ -126,8 +126,8 @@ public class TetrisActivity extends View {
                 arBlock[i][j] = 0;
             }
         }
-        newBlockPos.x = 0;//!!!!!!!!!!!!!!!!!!!!!! zeby sie klocek poza ekranem nie pojawil bo od razu game over
-        newBlockPos.y = 3;
+        blockPosition.x = 0;//!!!!!!!!!!!!!!!!!!!!!! zeby sie klocek poza ekranem nie pojawil bo od razu game over
+        blockPosition.y = 3;
 
         int blockType = random(1, 7);
         //blockType = 4; // DO TESTOWANIA
@@ -213,7 +213,7 @@ public class TetrisActivity extends View {
             return false;
         if (y >= MatrixSizeHeight)//to na false blokuje przekroczenie gornej krawedzi
             return false;//
-        if (blocksMatrix[y][x] > 0)
+        if (myMatrix[y][x] > 0)
             return false;
         return true;
     }
@@ -221,7 +221,7 @@ public class TetrisActivity extends View {
     void moveNewBlock(int dir, int[][] arNewBlock, Point posBlock) {//PORUSZANIE  I OBRACANIE KLOCKA
         switch (dir) {
             case DirRotate:
-                if (canRotate(DirDown)) { //////// naprawia odwaracanie ale dodatkowo obniza w dol
+                if (canRotate(DownDirection)) { //////// naprawia odwaracanie ale dodatkowo obniza w dol
                     int[][] arRotate = new int[blockArraySize][blockArraySize];
                     for (int i = 0; i < blockArraySize; i++) {
                         for (int j = 0; j < blockArraySize; j++) {
@@ -236,17 +236,17 @@ public class TetrisActivity extends View {
                 }
 
                 break;
-            case DirLeft:
+            case LeftDirection:
                 posBlock.x--;
                 break;
-            case DirRight:
+            case RightDirection:
                 posBlock.x++;
                 break;
-            case DirDown:
+            case DownDirection:
 
                 posBlock.y--;
                 break;
-            case DirUp:
+            case UpDirection:
                 posBlock.y++;
                 break;
         }
@@ -257,7 +257,7 @@ public class TetrisActivity extends View {
             for (int j = 0; j < blockArraySize; j++) {
                 if (arBlock[i][j] == 0)
                     continue;
-                blocksMatrix[posBlock.y + i][posBlock.x + j] = arBlock[i][j];
+                myMatrix[posBlock.y + i][posBlock.x + j] = arBlock[i][j];
                 arBlock[i][j] = 0;
             }
         }
@@ -275,7 +275,7 @@ public class TetrisActivity extends View {
             bFilled = true;
             for (y = 0; y < MatrixSizeHeight; y++) {
 
-                if (blocksMatrix[y][x] == 0) {
+                if (myMatrix[y][x] == 0) {
                     bFilled = false;
                     break;
                 }
@@ -287,33 +287,33 @@ public class TetrisActivity extends View {
 
         for (Integer element : fullColumns) {
 
-            int[][] temp = new int[blocksMatrix.length][];
+            int[][] temp = new int[myMatrix.length][];
 
-            for (int i = 0; i < blocksMatrix.length; i++) {
-                temp[i] = Arrays.copyOf(blocksMatrix[i], blocksMatrix[i].length);
+            for (int i = 0; i < myMatrix.length; i++) {
+                temp[i] = Arrays.copyOf(myMatrix[i], myMatrix[i].length);
             }
 
             if (count > 0) {
 
                 for (int j = 0; j < MatrixSizeHeight; j++) {
                     for (int k = element + count; k > 1; k--) {
-                        blocksMatrix[j][k] = temp[j][k - 1];
+                        myMatrix[j][k] = temp[j][k - 1];
                     }
                 }
             } else {
                 for (int j = 0; j < MatrixSizeHeight; j++) {
                     for (int k = element; k > 0; k--) {
-                        blocksMatrix[j][k] = temp[j][k - 1];
+                        myMatrix[j][k] = temp[j][k - 1];
                     }
-                    blocksMatrix[j][0] = 0;
+                    myMatrix[j][0] = 0;
                 }
             }
             count++;
         }
 
-        mScore += fullColumns.size() * 10 + 5;
-        if (topScore < mScore) {
-            topScore = mScore;
+        myScore += fullColumns.size() * 10 + 5;
+        if (topScore < myScore) {
+            topScore = myScore;
             SharedPreferences.Editor edit = prefs.edit();
             edit.putInt("TopScore", topScore);
             edit.commit();
@@ -322,26 +322,26 @@ public class TetrisActivity extends View {
     }
 
     boolean isGameOver() {
-        boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
+        boolean canMove = checkBlockSafe(newBlock, blockPosition);
         return !canMove;
     }
 
     boolean moveNewBlock(int dir) {
-        Point posBackup = new Point(newBlockPos);
-        moveNewBlock(dir, mArNewBlock, newBlockPos);
-        boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
+        Point posBackup = new Point(blockPosition);
+        moveNewBlock(dir, newBlock, blockPosition);
+        boolean canMove = checkBlockSafe(newBlock, blockPosition);
         if (canMove) {
             redraw();
             return true;
         }
 
-        newBlockPos.set(posBackup.x, posBackup.y);
+        blockPosition.set(posBackup.x, posBackup.y);
         return false;
     }
 
     boolean canRotate(int dir) {
-        moveNewBlock(dir, mArNewBlock, newBlockPos);
-        boolean canMove = checkBlockSafe(mArNewBlock, newBlockPos);
+        moveNewBlock(dir, newBlock, blockPosition);
+        boolean canMove = checkBlockSafe(newBlock, blockPosition);
         if (canMove) {
             redraw();
             return true;
@@ -361,7 +361,7 @@ public class TetrisActivity extends View {
         pnt.setTypeface(flappyFont); //TODO
         int posX = (int) (fontSize * 4.8);
         int poxY = (int) (fontSize * 1.5);
-        canvas.drawText(String.valueOf(mScore), posX, poxY, pnt);
+        canvas.drawText(String.valueOf(myScore), posX, poxY, pnt);
     }
 
     void showMatrix(Canvas canvas, int[][] arMatrix, boolean drawEmpth) {
@@ -377,21 +377,21 @@ public class TetrisActivity extends View {
     void showBlockImage(Canvas canvas, int blockX, int blockY, int blockType) {
         Rect rtBlock = getBlockArea(blockX, blockY);
 
-        canvas.drawBitmap(mArBmpCell[blockType], null, rtBlock, null);
+        canvas.drawBitmap(bitmapCell[blockType], null, rtBlock, null);
     }
 
 
     public void addCellImage(int index, Bitmap bmp) {
-        mArBmpCell[index] = bmp;
+        bitmapCell[index] = bmp;
     }
 
 
     public boolean block2Up() {
-        return moveNewBlock(DirUp);
+        return moveNewBlock(UpDirection);
     }
 
     public boolean block2Down() {
-        return moveNewBlock(DirDown);
+        return moveNewBlock(DownDirection);
     }
 
     public boolean block2Rotate() {
@@ -414,23 +414,23 @@ public class TetrisActivity extends View {
     }
 
     public void startGame() {
-        mScore = 0;
+        myScore = 0;
 
         for (int i = 0; i < MatrixSizeHeight; i++) {
             for (int j = 0; j < MatrixSizeWidth; j++) {
-                blocksMatrix[i][j] = 0;
+                myMatrix[i][j] = 0;
             }
         }
 
-        addNewBlock(mArNewBlock);
-        addNewBlock(mArNextBlock);
+        addNewBlock(newBlock);
+        addNewBlock(nextBlock);
         mTimerFrame.sendEmptyMessageDelayed(0, 10);
     }
 
     void showDialog_GameOver() {
         alertMsg = new AlertDialog.Builder(context)
                 .setTitle("Game over!")
-                .setMessage("Your score is " + mScore + "\n" + "Top Score is " + topScore)
+                .setMessage("Your score is " + myScore + "\n" + "Top Score is " + topScore)
                 .setPositiveButton("Play Again!",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -445,13 +445,13 @@ public class TetrisActivity extends View {
         if (blockSize < 1)
             initVariables(canvas);
 
-        showMatrix(canvas, blocksMatrix, false);
+        showMatrix(canvas, myMatrix, false);
         showNewBlock(canvas);
 
         addBirdControls();
         canvas.drawBitmap(birds[birdFrame], birdXpos, birdYpos, null);
 
-        showScore(canvas, mScore);
+        showScore(canvas, myScore);
 
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
@@ -488,25 +488,25 @@ public class TetrisActivity extends View {
     void showNewBlock(Canvas canvas) {
         for (int i = 0; i < blockArraySize; i++) {
             for (int j = 0; j < blockArraySize; j++) {
-                if (mArNewBlock[i][j] == 0)
+                if (newBlock[i][j] == 0)
                     continue;
-                showBlockImage(canvas, newBlockPos.x + j, newBlockPos.y + i, mArNewBlock[i][j]);
+                showBlockImage(canvas, blockPosition.x + j, blockPosition.y + i, newBlock[i][j]);
             }
         }
     }
 
     Handler mTimerFrame = new Handler() {
         public void handleMessage(Message msg) {//OPADANIE
-            boolean canMove = moveNewBlock(DirRight);
+            boolean canMove = moveNewBlock(RightDirection);
             if (canMove) {
-                moveNewBlock(DirDown);
+                moveNewBlock(DownDirection);
             }
 
             if (!canMove) {
-                copyBlock2Matrix(mArNewBlock, newBlockPos);
+                copyBlock2Matrix(newBlock, blockPosition);
                 checkLineFilled();
-                copyBlockArray(mArNextBlock, mArNewBlock);
-                addNewBlock(mArNextBlock);
+                copyBlockArray(nextBlock, newBlock);
+                addNewBlock(nextBlock);
                 if (isGameOver()) {
                     showDialog_GameOver();
                     return;
